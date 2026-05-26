@@ -16,7 +16,7 @@ return new class extends Migration
             $table->string('title');
             $table->string('author');
             $table->string('publisher');
-            $table->year('year');
+            $table->integer('year');
             $table->integer('stock');
             $table->string('language')->nullable();
             $table->string('isbn')->nullable();
