@@ -3,24 +3,25 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Login - International Library</title>
+    <title>Register - International Library</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <style>
         body {
             font-family: 'Inter', sans-serif;
             background-color: #f8fafc;
-            height: 100vh;
+            min-height: 100vh;
             display: flex;
             align-items: center;
             justify-content: center;
+            padding: 40px 0;
         }
-        .login-card {
+        .register-card {
             background: white;
             border-radius: 16px;
             box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03);
             width: 100%;
-            max-width: 420px;
+            max-width: 440px;
             padding: 40px;
             border: 1px solid #e2e8f0;
         }
@@ -63,22 +64,24 @@
             color: #334155;
             font-size: 0.9rem;
         }
+        .login-link {
+            color: #3b82f6;
+            text-decoration: none;
+            font-weight: 500;
+        }
+        .login-link:hover {
+            text-decoration: underline;
+        }
     </style>
 </head>
 <body>
 
-    <div class="login-card">
+    <div class="register-card">
         <div class="brand-text">📚 International Library</div>
-        <div class="subtitle">Enter your credentials to continue</div>
+        <div class="subtitle">Create a new account to explore our library</div>
         
-        @if (session('success'))
-            <div class="alert alert-success py-2 px-3 text-sm rounded-3 mb-3">
-                {{ session('success') }}
-            </div>
-        @endif
-
         @if ($errors->any())
-            <div class="alert alert-danger py-2 px-3 text-sm rounded-3 mb-3">
+            <div class="alert alert-danger py-2 px-3 text-sm rounded-3">
                 <ul class="mb-0 ps-3">
                     @foreach ($errors->all() as $error)
                         <li>{{ $error }}</li>
@@ -87,29 +90,35 @@
             </div>
         @endif
 
-        <form action="{{ route('login') }}" method="POST">
+        <form action="{{ route('register') }}" method="POST">
             @csrf
             <div class="mb-3">
+                <label class="form-label">Full Name</label>
+                <input type="text" name="name" class="form-control" value="{{ old('name') }}" required autofocus placeholder="John Doe">
+            </div>
+
+            <div class="mb-3">
                 <label class="form-label">Email Address</label>
-                <input type="email" name="email" class="form-control" value="{{ old('email') }}" required autofocus placeholder="name@example.com">
+                <input type="email" name="email" class="form-control" value="{{ old('email') }}" required placeholder="name@example.com">
             </div>
             
-            <div class="mb-4">
+            <div class="mb-3">
                 <label class="form-label">Password</label>
                 <input type="password" name="password" class="form-control" required placeholder="••••••••">
             </div>
+
+            <div class="mb-4">
+                <label class="form-label">Confirm Password</label>
+                <input type="password" name="password_confirmation" class="form-control" required placeholder="••••••••">
+            </div>
             
-            <div class="d-grid">
-                <button type="submit" class="btn btn-primary">Sign In</button>
+            <div class="d-grid mb-3">
+                <button type="submit" class="btn btn-primary">Sign Up</button>
             </div>
         </form>
-
-        <div class="text-center mt-3" style="font-size: 0.9rem; color: #64748b;">
-            Don't have an account? <a href="{{ route('register') }}" style="color: #3b82f6; text-decoration: none; font-weight: 500;" onmouseover="this.style.textDecoration='underline'" onmouseout="this.style.textDecoration='none'">Sign Up</a>
-        </div>
         
-        <div class="mt-4 text-center" style="font-size: 0.85rem; color: #94a3b8; border-top: 1px solid #f1f5f9; pt-3;">
-            Admin: admin@admin.com / password<br>Visitor: visitor@visitor.com / password
+        <div class="text-center mt-3" style="font-size: 0.9rem; color: #64748b;">
+            Already have an account? <a href="{{ route('login') }}" class="login-link">Sign In</a>
         </div>
     </div>
 

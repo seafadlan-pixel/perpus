@@ -4,10 +4,16 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\BookController;
 use App\Http\Controllers\PublicController;
 use App\Http\Controllers\WebAuthController;
+use App\Http\Controllers\BorrowingController;
+use App\Http\Controllers\AdminBorrowingController;
 
 // Web Authentication Routes
-Route::get('/login', [WebAuthController::class, 'showLoginForm'])->name('login');
-Route::post('/login', [WebAuthController::class, 'login']);
+Route::middleware('guest')->group(function () {
+    Route::get('/login', [WebAuthController::class, 'showLoginForm'])->name('login');
+    Route::post('/login', [WebAuthController::class, 'login']);
+    Route::get('/register', [WebAuthController::class, 'showRegisterForm'])->name('register');
+    Route::post('/register', [WebAuthController::class, 'register']);
+});
 Route::post('/logout', [WebAuthController::class, 'logout'])->name('logout');
 
 // Protected Routes (Wajib Login)
@@ -15,6 +21,11 @@ Route::middleware('auth')->group(function () {
     // Public Visitor Routes
     Route::get('/', [PublicController::class, 'index'])->name('public.index');
     Route::get('/book/{id}', [PublicController::class, 'show'])->name('public.show');
+
+    // User Borrowing Routes
+    Route::get('/borrow/{bookId}', [BorrowingController::class, 'create'])->name('borrow.create');
+    Route::post('/borrow', [BorrowingController::class, 'store'])->name('borrow.store');
+    Route::get('/my-borrowings', [BorrowingController::class, 'myBorrowings'])->name('borrow.my');
 });
 
 // Admin Routes
@@ -23,4 +34,11 @@ Route::prefix('admin')->middleware(['auth', \App\Http\Middleware\AdminMiddleware
         return redirect('/admin/books');
     });
     Route::resource('books', BookController::class);
+
+    // Borrowing Management
+    Route::get('borrowings', [AdminBorrowingController::class, 'index'])->name('admin.borrowings.index');
+    Route::patch('borrowings/{id}/approve', [AdminBorrowingController::class, 'approve'])->name('admin.borrowings.approve');
+    Route::patch('borrowings/{id}/reject', [AdminBorrowingController::class, 'reject'])->name('admin.borrowings.reject');
+    Route::patch('borrowings/{id}/return', [AdminBorrowingController::class, 'returnBook'])->name('admin.borrowings.return');
+    Route::delete('borrowings/{id}', [AdminBorrowingController::class, 'destroy'])->name('admin.borrowings.destroy');
 });

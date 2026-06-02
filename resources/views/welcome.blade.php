@@ -178,13 +178,15 @@
                     @if(auth()->user()->role === 'admin')
                         <a href="/admin/books" class="btn btn-outline-dark btn-sm rounded-3 px-3 me-3">Dashboard</a>
                     @endif
+                    <a href="{{ route('borrow.my') }}" class="btn btn-outline-dark btn-sm rounded-3 px-3 me-3">📋 Peminjaman Saya</a>
                     <span class="me-3 text-secondary" style="font-size: 0.9rem;">{{ auth()->user()->name }}</span>
                     <form action="{{ route('logout') }}" method="POST" class="m-0">
                         @csrf
                         <button type="submit" class="btn btn-sm btn-dark rounded-3 px-3">Logout</button>
                     </form>
                 @else
-                    <a href="{{ route('login') }}" class="btn btn-dark rounded-3 px-4">Login</a>
+                    <a href="{{ route('login') }}" class="btn btn-outline-dark btn-sm rounded-3 px-3 me-2">Login</a>
+                    <a href="{{ route('register') }}" class="btn btn-dark btn-sm rounded-3 px-3">Register</a>
                 @endauth
             </div>
         </div>

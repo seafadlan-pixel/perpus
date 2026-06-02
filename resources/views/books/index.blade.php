@@ -22,6 +22,7 @@
     <div class="sidebar" style="width: 250px;">
         <h4 class="text-center mb-4">Library Admin</h4>
         <a href="{{ route('books.index') }}">📚 Book Management</a>
+        <a href="{{ route('admin.borrowings.index') }}">📋 Borrowing Management</a>
         <a href="{{ route('public.index') }}" target="_blank">🌍 View Public Site</a>
         <form action="{{ route('logout') }}" method="POST" class="mt-auto px-3 pb-4" style="position: absolute; bottom: 0; width: 250px;">
             @csrf

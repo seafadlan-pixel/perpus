@@ -151,6 +151,32 @@
                             <p class="text-muted fst-italic">No synopsis available for this book.</p>
                         @endif
                     </div>
+
+                    @auth
+                        @if(session('error'))
+                            <div class="alert alert-danger mt-3" role="alert">
+                                {{ session('error') }}
+                            </div>
+                        @endif
+
+                        @if(session('success'))
+                            <div class="alert alert-success mt-3" role="alert">
+                                {{ session('success') }}
+                            </div>
+                        @endif
+
+                        <div class="mt-4 pt-3" style="border-top: 2px solid #e9ecef;">
+                            @if($book->stock > 0)
+                                <a href="{{ route('borrow.create', $book->id) }}" class="btn btn-lg btn-dark rounded-pill px-5 py-3" style="font-weight: 600;">
+                                    📥 Pinjam Buku Ini
+                                </a>
+                            @else
+                                <button class="btn btn-lg btn-secondary rounded-pill px-5 py-3" disabled style="font-weight: 600;">
+                                    📛 Stok Habis
+                                </button>
+                            @endif
+                        </div>
+                    @endauth
                 </div>
             </div>
         </div>
