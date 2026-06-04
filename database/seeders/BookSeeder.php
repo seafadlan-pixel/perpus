@@ -4,6 +4,9 @@ namespace Database\Seeders;
 
 use App\Models\Book;
 use Illuminate\Database\Seeder;
+use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\Schema;
+use Illuminate\Support\Facades\Log;
 
 class BookSeeder extends Seeder
 {
@@ -12,315 +15,63 @@ class BookSeeder extends Seeder
      */
     public function run(): void
     {
-        $books = [
-            // === CLASSIC LITERATURE ===
-            [
-                'title' => 'To Kill a Mockingbird',
-                'author' => 'Harper Lee',
-                'publisher' => 'J. B. Lippincott & Co.',
-                'year' => 1960,
-                'stock' => 8,
-                'language' => 'English',
-                'isbn' => '978-0061120084',
-                'category' => 'Classic',
-                'synopsis' => 'A novel about racial injustice in the American South, seen through the eyes of young Scout Finch.',
-                'cover_image' => 'https://covers.openlibrary.org/b/id/8228691-L.jpg',
-            ],
-            [
-                'title' => 'Pride and Prejudice',
-                'author' => 'Jane Austen',
-                'publisher' => 'T. Egerton',
-                'year' => 1813,
-                'stock' => 6,
-                'language' => 'English',
-                'isbn' => '978-0141439518',
-                'category' => 'Classic',
-                'synopsis' => 'A witty tale of love, reputation, and class in Georgian-era England.',
-                'cover_image' => 'https://covers.openlibrary.org/b/id/12645114-L.jpg',
-            ],
-            [
-                'title' => 'The Great Gatsby',
-                'author' => 'F. Scott Fitzgerald',
-                'publisher' => 'Charles Scribner\'s Sons',
-                'year' => 1925,
-                'stock' => 5,
-                'language' => 'English',
-                'isbn' => '978-0743273565',
-                'category' => 'Classic',
-                'synopsis' => 'A story of the mysterious millionaire Jay Gatsby and his obsession with Daisy Buchanan.',
-                'cover_image' => 'https://covers.openlibrary.org/b/id/14350216-L.jpg',
-            ],
-            [
-                'title' => 'Jane Eyre',
-                'author' => 'Charlotte Brontë',
-                'publisher' => 'Smith, Elder & Co.',
-                'year' => 1847,
-                'stock' => 4,
-                'language' => 'English',
-                'isbn' => '978-0141441146',
-                'category' => 'Classic',
-                'synopsis' => 'The story of an orphaned girl who becomes governess at Thornfield Hall and falls in love with the brooding Mr. Rochester.',
-                'cover_image' => 'https://covers.openlibrary.org/b/id/12857428-L.jpg',
-            ],
-            [
-                'title' => 'Wuthering Heights',
-                'author' => 'Emily Brontë',
-                'publisher' => 'Thomas Cautley Newby',
-                'year' => 1847,
-                'stock' => 3,
-                'language' => 'English',
-                'isbn' => '978-0141439556',
-                'category' => 'Classic',
-                'synopsis' => 'A passionate and dark tale of love and revenge on the Yorkshire moors.',
-                'cover_image' => 'https://covers.openlibrary.org/b/id/12818077-L.jpg',
-            ],
-            [
-                'title' => 'Moby-Dick',
-                'author' => 'Herman Melville',
-                'publisher' => 'Harper & Brothers',
-                'year' => 1851,
-                'stock' => 3,
-                'language' => 'English',
-                'isbn' => '978-0142437247',
-                'category' => 'Classic',
-                'synopsis' => 'Captain Ahab\'s obsessive quest for the great white whale.',
-                'cover_image' => 'https://covers.openlibrary.org/b/id/12880301-L.jpg',
-            ],
+        // Bersihkan data lama dengan aman
+        Schema::disableForeignKeyConstraints();
+        Book::query()->delete();
+        Schema::enableForeignKeyConstraints();
 
-            // === DYSTOPIAN & SCI-FI ===
-            [
-                'title' => '1984',
-                'author' => 'George Orwell',
-                'publisher' => 'Secker & Warburg',
-                'year' => 1949,
-                'stock' => 7,
-                'language' => 'English',
-                'isbn' => '978-0451524935',
-                'category' => 'Dystopian',
-                'synopsis' => 'A chilling dystopian novel about totalitarianism and mass surveillance in a society ruled by Big Brother.',
-                'cover_image' => 'https://covers.openlibrary.org/b/id/15325672-L.jpg',
-            ],
-            [
-                'title' => 'Brave New World',
-                'author' => 'Aldous Huxley',
-                'publisher' => 'Chatto & Windus',
-                'year' => 1932,
-                'stock' => 4,
-                'language' => 'English',
-                'isbn' => '978-0060850524',
-                'category' => 'Dystopian',
-                'synopsis' => 'A futuristic world where humans are engineered and controlled through pleasure and conditioning.',
-                'cover_image' => 'https://covers.openlibrary.org/b/id/6553419-L.jpg',
-            ],
-            [
-                'title' => 'Fahrenheit 451',
-                'author' => 'Ray Bradbury',
-                'publisher' => 'Ballantine Books',
-                'year' => 1953,
-                'stock' => 5,
-                'language' => 'English',
-                'isbn' => '978-1451673319',
-                'category' => 'Dystopian',
-                'synopsis' => 'In a future society, firemen burn books and free thought is suppressed.',
-                'cover_image' => 'https://covers.openlibrary.org/b/id/9273028-L.jpg',
-            ],
-            [
-                'title' => 'Dune',
-                'author' => 'Frank Herbert',
-                'publisher' => 'Chilton Books',
-                'year' => 1965,
-                'stock' => 6,
-                'language' => 'English',
-                'isbn' => '978-0441172719',
-                'category' => 'Science Fiction',
-                'synopsis' => 'An epic tale of politics, religion, and ecology on the desert planet Arrakis.',
-                'cover_image' => 'https://covers.openlibrary.org/b/id/11513227-L.jpg',
-            ],
-            [
-                'title' => 'The Hitchhiker\'s Guide to the Galaxy',
-                'author' => 'Douglas Adams',
-                'publisher' => 'Pan Books',
-                'year' => 1979,
-                'stock' => 5,
-                'language' => 'English',
-                'isbn' => '978-0345391803',
-                'category' => 'Science Fiction',
-                'synopsis' => 'Arthur Dent escapes Earth\'s demolition and embarks on a hilarious intergalactic adventure.',
-                'cover_image' => 'https://covers.openlibrary.org/b/id/14446161-L.jpg',
-            ],
-
-            // === FANTASY ===
-            [
-                'title' => 'The Lord of the Rings',
-                'author' => 'J.R.R. Tolkien',
-                'publisher' => 'George Allen & Unwin',
-                'year' => 1954,
-                'stock' => 5,
-                'language' => 'English',
-                'isbn' => '978-0544003415',
-                'category' => 'Fantasy',
-                'synopsis' => 'An epic high fantasy following the quest to destroy the One Ring and defeat the Dark Lord Sauron.',
-                'cover_image' => 'https://covers.openlibrary.org/b/id/8259440-L.jpg',
-            ],
-            [
-                'title' => 'The Hobbit',
-                'author' => 'J.R.R. Tolkien',
-                'publisher' => 'George Allen & Unwin',
-                'year' => 1937,
-                'stock' => 6,
-                'language' => 'English',
-                'isbn' => '978-0547928227',
-                'category' => 'Fantasy',
-                'synopsis' => 'Bilbo Baggins embarks on an unexpected journey with a company of dwarves to reclaim their homeland.',
-                'cover_image' => 'https://covers.openlibrary.org/b/id/14627213-L.jpg',
-            ],
-            [
-                'title' => 'Harry Potter and the Philosopher\'s Stone',
-                'author' => 'J.K. Rowling',
-                'publisher' => 'Bloomsbury',
-                'year' => 1997,
-                'stock' => 10,
-                'language' => 'English',
-                'isbn' => '978-0747532699',
-                'category' => 'Fantasy',
-                'synopsis' => 'An orphaned boy discovers he is a wizard and attends Hogwarts School of Witchcraft and Wizardry.',
-                'cover_image' => 'https://covers.openlibrary.org/b/id/10521270-L.jpg',
-            ],
-            [
-                'title' => 'A Game of Thrones',
-                'author' => 'George R.R. Martin',
-                'publisher' => 'Bantam Books',
-                'year' => 1996,
-                'stock' => 5,
-                'language' => 'English',
-                'isbn' => '978-0553573404',
-                'category' => 'Fantasy',
-                'synopsis' => 'Noble families wage war for the Iron Throne in the epic fantasy land of Westeros.',
-                'cover_image' => 'https://covers.openlibrary.org/b/id/14332397-L.jpg',
-            ],
-            [
-                'title' => 'The Chronicles of Narnia',
-                'author' => 'C.S. Lewis',
-                'publisher' => 'Geoffrey Bles',
-                'year' => 1950,
-                'stock' => 4,
-                'language' => 'English',
-                'isbn' => '978-0066238500',
-                'category' => 'Fantasy',
-                'synopsis' => 'Four children enter a magical land through a wardrobe and help defeat the White Witch.',
-                'cover_image' => 'https://covers.openlibrary.org/b/id/12439157-L.jpg',
-            ],
-
-            // === NON-FICTION / HISTORY ===
-            [
-                'title' => 'Sapiens: A Brief History of Humankind',
-                'author' => 'Yuval Noah Harari',
-                'publisher' => 'Harvill Secker',
-                'year' => 2011,
-                'stock' => 7,
-                'language' => 'English',
-                'isbn' => '978-0062316097',
-                'category' => 'History',
-                'synopsis' => 'A sweeping overview of human history, from the Stone Age to the present day.',
-                'cover_image' => 'https://covers.openlibrary.org/b/id/12470940-L.jpg',
-            ],
-            [
-                'title' => 'A Brief History of Time',
-                'author' => 'Stephen Hawking',
-                'publisher' => 'Bantam Books',
-                'year' => 1988,
-                'stock' => 4,
-                'language' => 'English',
-                'isbn' => '978-0553380163',
-                'category' => 'Science',
-                'synopsis' => 'Stephen Hawking explains complex cosmological concepts for general readers.',
-                'cover_image' => 'https://covers.openlibrary.org/b/id/8578955-L.jpg',
-            ],
-            [
-                'title' => 'The Art of War',
-                'author' => 'Sun Tzu',
-                'publisher' => 'Various',
-                'year' => -500,
-                'stock' => 6,
-                'language' => 'Chinese',
-                'isbn' => '978-1599869773',
-                'category' => 'Philosophy',
-                'synopsis' => 'An ancient Chinese military treatise that has influenced both Eastern and Western military thinking.',
-                'cover_image' => 'https://covers.openlibrary.org/b/id/12742701-L.jpg',
-            ],
-            [
-                'title' => 'Atomic Habits',
-                'author' => 'James Clear',
-                'publisher' => 'Avery',
-                'year' => 2018,
-                'stock' => 9,
-                'language' => 'English',
-                'isbn' => '978-0735211292',
-                'category' => 'Self-Help',
-                'synopsis' => 'A practical guide to building good habits and breaking bad ones through small, incremental changes.',
-                'cover_image' => 'https://covers.openlibrary.org/b/id/10958382-L.jpg',
-            ],
-            [
-                'title' => 'Thinking, Fast and Slow',
-                'author' => 'Daniel Kahneman',
-                'publisher' => 'Farrar, Straus and Giroux',
-                'year' => 2011,
-                'stock' => 4,
-                'language' => 'English',
-                'isbn' => '978-0374533557',
-                'category' => 'Psychology',
-                'synopsis' => 'Nobel laureate Daniel Kahneman reveals the two systems that drive the way we think.',
-                'cover_image' => 'https://covers.openlibrary.org/b/id/7360093-L.jpg',
-            ],
-
-            // === INDONESIAN LITERATURE ===
-            [
-                'title' => 'Laskar Pelangi',
-                'author' => 'Andrea Hirata',
-                'publisher' => 'Bentang Pustaka',
-                'year' => 2005,
-                'stock' => 10,
-                'language' => 'Indonesian',
-                'isbn' => '978-9793062792',
-                'category' => 'Fiction',
-                'synopsis' => 'Kisah inspiratif tentang anak-anak di Belitung yang berjuang untuk mendapatkan pendidikan.',
-                'cover_image' => 'https://covers.openlibrary.org/b/id/12833077-L.jpg',
-            ],
-            [
-                'title' => 'Bumi Manusia',
-                'author' => 'Pramoedya Ananta Toer',
-                'publisher' => 'Hasta Mitra',
-                'year' => 1980,
-                'stock' => 4,
-                'language' => 'Indonesian',
-                'isbn' => '978-9799731234',
-                'category' => 'Historical Fiction',
-                'synopsis' => 'Kisah cinta dan perjuangan Minke di masa kolonial Hindia Belanda.',
-                'cover_image' => 'https://covers.openlibrary.org/b/id/10574043-L.jpg',
-            ],
+        // 1. Data Lokal 20 Buku Indonesia Terpopuler dari Berbagai Genre (dengan Cover Sesuai)
+        $fallbackBooks = [
+            // === ROMANCE (ROMANSA) ===
             [
                 'title' => 'Perahu Kertas',
                 'author' => 'Dee Lestari',
                 'publisher' => 'Bentang Pustaka',
                 'year' => 2009,
-                'stock' => 6,
+                'stock' => 8,
                 'language' => 'Indonesian',
                 'isbn' => '978-9793062945',
                 'category' => 'Romance',
-                'synopsis' => 'Kisah cinta dua anak muda yang memiliki mimpi berbeda namun saling terhubung.',
+                'synopsis' => 'Kisah cinta dan pencarian jati diri antara Kugy, gadis unik penemu surat perahu kertas, dan Keenan, pelukis berbakat yang dipaksa kuliah ekonomi.',
                 'cover_image' => 'https://covers.openlibrary.org/b/id/12648480-L.jpg',
             ],
             [
-                'title' => 'Negeri 5 Menara',
-                'author' => 'Ahmad Fuadi',
-                'publisher' => 'Gramedia Pustaka Utama',
-                'year' => 2009,
-                'stock' => 7,
+                'title' => 'Dilan: Dia adalah Dilanku Tahun 1990',
+                'author' => 'Pidi Baiq',
+                'publisher' => 'Pastel Books',
+                'year' => 2014,
+                'stock' => 10,
                 'language' => 'Indonesian',
-                'isbn' => '978-9792256307',
-                'category' => 'Fiction',
-                'synopsis' => 'Kisah persahabatan enam santri di sebuah pesantren yang bermimpi menjelajahi dunia.',
-                'cover_image' => 'https://covers.openlibrary.org/b/id/12872523-L.jpg',
+                'isbn' => '978-6027870413',
+                'category' => 'Romance',
+                'synopsis' => 'Kisah cinta SMA tahun 1990 antara Milea dan Dilan, anggota geng motor di Bandung yang memiliki cara unik dalam mendekati wanita.',
+                'cover_image' => 'https://covers.openlibrary.org/b/id/12832961-L.jpg',
+            ],
+            [
+                'title' => 'Critical Eleven',
+                'author' => 'Ika Natassa',
+                'publisher' => 'Gramedia Pustaka Utama',
+                'year' => 2015,
+                'stock' => 6,
+                'language' => 'Indonesian',
+                'isbn' => '978-6020318929',
+                'category' => 'Romance',
+                'synopsis' => 'Kisah manis dan getir hubungan pernikahan Tanya dan Aldebaran yang diuji oleh tragedi besar setelah pertemuan pertama di pesawat.',
+                'cover_image' => 'https://covers.openlibrary.org/b/isbn/9786020318929-L.jpg',
+            ],
+
+            // === FANTASY & SCI-FI (FANTASI & FIKSI ILMIAH) ===
+            [
+                'title' => 'Bumi',
+                'author' => 'Tere Liye',
+                'publisher' => 'Gramedia Pustaka Utama',
+                'year' => 2014,
+                'stock' => 8,
+                'language' => 'Indonesian',
+                'isbn' => '978-6020301129',
+                'category' => 'Fantasy',
+                'synopsis' => 'Petualangan fantasi Raib, seorang gadis remaja yang bisa menghilang, bersama dua temannya Seli dan Ali di klan Bulan.',
+                'cover_image' => 'https://covers.openlibrary.org/b/id/13890252-L.jpg',
             ],
             [
                 'title' => 'Supernova: Ksatria, Puteri, dan Bintang Jatuh',
@@ -330,212 +81,308 @@ class BookSeeder extends Seeder
                 'stock' => 5,
                 'language' => 'Indonesian',
                 'isbn' => '978-9793062044',
-                'category' => 'Fiction',
-                'synopsis' => 'Novel fiksi sains yang menggabungkan spiritualitas, sains, dan cinta.',
+                'category' => 'Science Fiction',
+                'synopsis' => 'Novel fiksi sains filosofis yang menggabungkan sains populer, spiritualitas, teori chaos, dan kisah cinta segitiga yang rumit.',
                 'cover_image' => 'https://covers.openlibrary.org/b/id/13044984-L.jpg',
             ],
-
-            // === WORLD LITERATURE ===
             [
-                'title' => 'One Hundred Years of Solitude',
-                'author' => 'Gabriel García Márquez',
-                'publisher' => 'Editorial Sudamericana',
-                'year' => 1967,
-                'stock' => 4,
-                'language' => 'Spanish',
-                'isbn' => '978-0060883287',
-                'category' => 'Magical Realism',
-                'synopsis' => 'The multi-generational story of the Buendía family in the fictional town of Macondo.',
-                'cover_image' => 'https://covers.openlibrary.org/b/id/10527843-L.jpg',
-            ],
-            [
-                'title' => 'Crime and Punishment',
-                'author' => 'Fyodor Dostoevsky',
-                'publisher' => 'The Russian Messenger',
-                'year' => 1866,
-                'stock' => 3,
-                'language' => 'Russian',
-                'isbn' => '978-0486415871',
-                'category' => 'Classic',
-                'synopsis' => 'A young student commits murder and struggles with guilt and redemption in St. Petersburg.',
-                'cover_image' => 'https://covers.openlibrary.org/b/id/12738964-L.jpg',
-            ],
-            [
-                'title' => 'The Little Prince',
-                'author' => 'Antoine de Saint-Exupéry',
-                'publisher' => 'Reynal & Hitchcock',
-                'year' => 1943,
-                'stock' => 8,
-                'language' => 'French',
-                'isbn' => '978-0156012195',
-                'category' => 'Philosophical Fiction',
-                'synopsis' => 'A pilot meets a little prince from a tiny asteroid who teaches him about love and life.',
-                'cover_image' => 'https://covers.openlibrary.org/b/id/12844155-L.jpg',
-            ],
-            [
-                'title' => 'Don Quixote',
-                'author' => 'Miguel de Cervantes',
-                'publisher' => 'Francisco de Robles',
-                'year' => 1605,
-                'stock' => 3,
-                'language' => 'Spanish',
-                'isbn' => '978-0060934347',
-                'category' => 'Classic',
-                'synopsis' => 'An aging nobleman reads too many chivalric romances and sets out to revive chivalry.',
-                'cover_image' => 'https://covers.openlibrary.org/b/id/12647979-L.jpg',
-            ],
-            [
-                'title' => 'The Alchemist',
-                'author' => 'Paulo Coelho',
-                'publisher' => 'HarperOne',
-                'year' => 1988,
-                'stock' => 9,
-                'language' => 'Portuguese',
-                'isbn' => '978-0062315007',
-                'category' => 'Philosophical Fiction',
-                'synopsis' => 'A young shepherd travels from Spain to Egypt in pursuit of a treasure and discovers his personal legend.',
-                'cover_image' => 'https://covers.openlibrary.org/b/id/12547186-L.jpg',
-            ],
-            [
-                'title' => 'Norwegian Wood',
-                'author' => 'Haruki Murakami',
-                'publisher' => 'Kodansha',
-                'year' => 1987,
-                'stock' => 5,
-                'language' => 'Japanese',
-                'isbn' => '978-0375704024',
-                'category' => 'Romance',
-                'synopsis' => 'A nostalgic story of loss, sexuality, and friendship in 1960s Tokyo.',
-                'cover_image' => 'https://covers.openlibrary.org/b/id/12547429-L.jpg',
-            ],
-            [
-                'title' => 'Anna Karenina',
-                'author' => 'Leo Tolstoy',
-                'publisher' => 'The Russian Messenger',
-                'year' => 1877,
-                'stock' => 3,
-                'language' => 'Russian',
-                'isbn' => '978-0143035008',
-                'category' => 'Classic',
-                'synopsis' => 'A married aristocrat begins a tragic affair with the dashing Count Vronsky.',
-                'cover_image' => 'https://covers.openlibrary.org/b/id/12547498-L.jpg',
-            ],
-
-            // === THRILLER / MYSTERY ===
-            [
-                'title' => 'The Da Vinci Code',
-                'author' => 'Dan Brown',
-                'publisher' => 'Doubleday',
-                'year' => 2003,
+                'title' => 'Aroma Karsa',
+                'author' => 'Dee Lestari',
+                'publisher' => 'Bentang Pustaka',
+                'year' => 2018,
                 'stock' => 7,
-                'language' => 'English',
-                'isbn' => '978-0307474278',
-                'category' => 'Thriller',
-                'synopsis' => 'A murder inside the Louvre leads to a trail of clues hidden in the works of Leonardo da Vinci.',
-                'cover_image' => 'https://covers.openlibrary.org/b/id/12547541-L.jpg',
-            ],
-            [
-                'title' => 'And Then There Were None',
-                'author' => 'Agatha Christie',
-                'publisher' => 'Collins Crime Club',
-                'year' => 1939,
-                'stock' => 5,
-                'language' => 'English',
-                'isbn' => '978-0062073488',
-                'category' => 'Mystery',
-                'synopsis' => 'Ten strangers are lured to an island and are killed one by one in accordance with a nursery rhyme.',
-                'cover_image' => 'https://covers.openlibrary.org/b/id/12547620-L.jpg',
-            ],
-            [
-                'title' => 'The Girl with the Dragon Tattoo',
-                'author' => 'Stieg Larsson',
-                'publisher' => 'Norstedts Förlag',
-                'year' => 2005,
-                'stock' => 4,
-                'language' => 'Swedish',
-                'isbn' => '978-0307454546',
-                'category' => 'Thriller',
-                'synopsis' => 'A journalist and a hacker investigate a wealthy family\'s dark secrets.',
-                'cover_image' => 'https://covers.openlibrary.org/b/id/12547700-L.jpg',
-            ],
-            [
-                'title' => 'Gone Girl',
-                'author' => 'Gillian Flynn',
-                'publisher' => 'Crown Publishing',
-                'year' => 2012,
-                'stock' => 6,
-                'language' => 'English',
-                'isbn' => '978-0307588371',
-                'category' => 'Thriller',
-                'synopsis' => 'A wife disappears on her fifth wedding anniversary, and all suspicion falls on her husband.',
-                'cover_image' => 'https://covers.openlibrary.org/b/id/12547789-L.jpg',
+                'language' => 'Indonesian',
+                'isbn' => '978-6022914631',
+                'category' => 'Fantasy',
+                'synopsis' => 'Pencarian tanaman mistis Puspa Karsa yang melibatkan Jati Wesi si pemilik hidung luar biasa dan Raras Prayagung.',
+                'cover_image' => 'https://covers.openlibrary.org/b/isbn/9786022914631-L.jpg',
             ],
 
-            // === MODERN FICTION ===
+            // === HORROR & MYSTERY (HOROR & MISTERI) ===
             [
-                'title' => 'The Kite Runner',
-                'author' => 'Khaled Hosseini',
-                'publisher' => 'Riverhead Books',
-                'year' => 2003,
+                'title' => 'Danur',
+                'author' => 'Risa Saraswati',
+                'publisher' => 'Bukune',
+                'year' => 2011,
                 'stock' => 5,
-                'language' => 'English',
-                'isbn' => '978-1594631931',
-                'category' => 'Fiction',
-                'synopsis' => 'A story of friendship, betrayal, and redemption set against the backdrop of Afghanistan.',
-                'cover_image' => 'https://covers.openlibrary.org/b/id/12547850-L.jpg',
+                'language' => 'Indonesian',
+                'isbn' => '978-9797805173',
+                'category' => 'Horror',
+                'synopsis' => 'Kisah nyata Risa Saraswati yang berteman dengan lima hantu anak-anak keturunan Belanda di rumah neneknya.',
+                'cover_image' => 'https://covers.openlibrary.org/b/isbn/9789797805173-L.jpg',
             ],
             [
-                'title' => 'The Catcher in the Rye',
-                'author' => 'J.D. Salinger',
-                'publisher' => 'Little, Brown and Company',
-                'year' => 1951,
+                'title' => 'KKN di Desa Penari',
+                'author' => 'SimpleMan',
+                'publisher' => 'Bukune',
+                'year' => 2019,
+                'stock' => 6,
+                'language' => 'Indonesian',
+                'isbn' => '978-6022203377',
+                'category' => 'Horror',
+                'synopsis' => 'Kisah mencekam sekelompok mahasiswa yang melaksanakan KKN di desa terpencil dan melanggar aturan mistis setempat.',
+                'cover_image' => 'https://covers.openlibrary.org/b/isbn/978-6022203377-L.jpg',
+            ],
+            [
+                'title' => 'Katarsis',
+                'author' => 'Anastasia Aemilia',
+                'publisher' => 'Gramedia Pustaka Utama',
+                'year' => 2013,
                 'stock' => 4,
-                'language' => 'English',
-                'isbn' => '978-0316769488',
-                'category' => 'Classic',
-                'synopsis' => 'Holden Caulfield narrates his experiences in New York City after being expelled from prep school.',
-                'cover_image' => 'https://covers.openlibrary.org/b/id/12547900-L.jpg',
+                'language' => 'Indonesian',
+                'isbn' => '978-9792295672',
+                'category' => 'Thriller',
+                'synopsis' => 'Sebuah thriller psikologis gelap tentang gadis muda bernama Tara yang menjadi satu-satunya saksi pembunuhan tragis keluarganya.',
+                'cover_image' => 'https://covers.openlibrary.org/b/isbn/9789792295672-L.jpg',
+            ],
+
+            // === SELF-HELP (PENGEMBANGAN DIRI) ===
+            [
+                'title' => 'Filosofi Teras',
+                'author' => 'Henry Manampiring',
+                'publisher' => 'Buku Kompas',
+                'year' => 2018,
+                'stock' => 12,
+                'language' => 'Indonesian',
+                'isbn' => '978-6024125189',
+                'category' => 'Self-Help',
+                'synopsis' => 'Panduan praktis filsafat Yunani-Romawi kuno (Stoisisme) untuk mengatasi kekhawatiran dan emosi negatif di kehidupan modern.',
+                'cover_image' => 'https://covers.openlibrary.org/b/isbn/9786024125189-L.jpg',
             ],
             [
-                'title' => 'The Book Thief',
-                'author' => 'Markus Zusak',
-                'publisher' => 'Picador',
-                'year' => 2005,
+                'title' => 'Bicara Itu Ada Seninya',
+                'author' => 'Oh Su Hyang',
+                'publisher' => 'Bhuana Ilmu Populer',
+                'year' => 2018,
+                'stock' => 9,
+                'language' => 'Indonesian',
+                'isbn' => '978-6024523930',
+                'category' => 'Self-Help',
+                'synopsis' => 'Buku terjemahan laris yang membahas metode komunikasi efektif, cara berbicara persuasif, dan seni mencairkan suasana.',
+                'cover_image' => 'https://covers.openlibrary.org/b/isbn/9786024523930-L.jpg',
+            ],
+
+            // === HISTORICAL FICTION (FIKSI SEJARAH) ===
+            [
+                'title' => 'Bumi Manusia',
+                'author' => 'Pramoedya Ananta Toer',
+                'publisher' => 'Hasta Mitra',
+                'year' => 1980,
                 'stock' => 5,
-                'language' => 'English',
-                'isbn' => '978-0375842207',
+                'language' => 'Indonesian',
+                'isbn' => '978-9799731234',
                 'category' => 'Historical Fiction',
-                'synopsis' => 'A young girl steals books in Nazi Germany, narrated by Death itself.',
-                'cover_image' => 'https://covers.openlibrary.org/b/id/12547956-L.jpg',
+                'synopsis' => 'Karya sastra klasik yang menyoroti kebangkitan nasionalisme pribumi melalui kisah cinta Minke dan Annelies di akhir era kolonial.',
+                'cover_image' => 'https://covers.openlibrary.org/b/id/10574043-L.jpg',
             ],
             [
-                'title' => 'Life of Pi',
-                'author' => 'Yann Martel',
-                'publisher' => 'Knopf Canada',
-                'year' => 2001,
-                'stock' => 4,
-                'language' => 'English',
-                'isbn' => '978-0156027328',
-                'category' => 'Adventure',
-                'synopsis' => 'A young Indian boy survives 227 days on a lifeboat in the Pacific Ocean with a Bengal tiger.',
-                'cover_image' => 'https://covers.openlibrary.org/b/id/12548000-L.jpg',
-            ],
-            [
-                'title' => 'The Fault in Our Stars',
-                'author' => 'John Green',
-                'publisher' => 'Dutton Books',
+                'title' => 'Gadis Kretek',
+                'author' => 'Ratih Kumala',
+                'publisher' => 'Gramedia Pustaka Utama',
                 'year' => 2012,
-                'stock' => 8,
-                'language' => 'English',
-                'isbn' => '978-0525478812',
-                'category' => 'Romance',
-                'synopsis' => 'Two teenagers with cancer fall in love and share a powerful journey together.',
-                'cover_image' => 'https://covers.openlibrary.org/b/id/12548050-L.jpg',
+                'stock' => 5,
+                'language' => 'Indonesian',
+                'isbn' => '978-9792281415',
+                'category' => 'Historical Fiction',
+                'synopsis' => 'Kisah cinta berlatar belakang perkembangan industri rokok kretek lokal yang sarat budaya Jawa pasca-kemerdekaan.',
+                'cover_image' => 'https://covers.openlibrary.org/b/id/13854124-L.jpg',
+            ],
+
+            // === INSPIRATIONAL & ADVENTURE (INSPIRATIF & PETUALANGAN) ===
+            [
+                'title' => 'Laskar Pelangi',
+                'author' => 'Andrea Hirata',
+                'publisher' => 'Bentang Pustaka',
+                'year' => 2005,
+                'stock' => 10,
+                'language' => 'Indonesian',
+                'isbn' => '978-9793062792',
+                'category' => 'Adventure',
+                'synopsis' => 'Kisah luar biasa anak-anak Laskar Pelangi di Belitung dalam mewujudkan mimpi sekolah mereka yang sederhana.',
+                'cover_image' => 'https://covers.openlibrary.org/b/id/12833077-L.jpg',
+            ],
+            [
+                'title' => '5 cm',
+                'author' => 'Donny Dhirgantoro',
+                'publisher' => 'Grasindo',
+                'year' => 2005,
+                'stock' => 7,
+                'language' => 'Indonesian',
+                'isbn' => '978-9790150249',
+                'category' => 'Adventure',
+                'synopsis' => 'Kisah lima sahabat karib yang menantang diri mereka mendaki puncak tertinggi di Pulau Jawa, Mahameru, demi persahabatan dan cinta tanah air.',
+                'cover_image' => 'https://covers.openlibrary.org/b/isbn/9789790150249-L.jpg',
+            ],
+            [
+                'title' => 'Negeri 5 Menara',
+                'author' => 'Ahmad Fuadi',
+                'publisher' => 'Gramedia Pustaka Utama',
+                'year' => 2009,
+                'stock' => 7,
+                'language' => 'Indonesian',
+                'isbn' => '978-9792256307',
+                'category' => 'Adventure',
+                'synopsis' => 'Kisah persahabatan enam santri dari berbagai daerah yang dipersatukan di pesantren dan bermimpi menaklukkan dunia dengan tekad "Man Jadda Wajada".',
+                'cover_image' => 'https://covers.openlibrary.org/b/id/12872523-L.jpg',
+            ],
+
+            // === DRAMA & FAMILY (DRAMA & KELUARGA) ===
+            [
+                'title' => 'Sabtu Bersama Bapak',
+                'author' => 'Adhitya Mulya',
+                'publisher' => 'GagasMedia',
+                'year' => 2014,
+                'stock' => 6,
+                'language' => 'Indonesian',
+                'isbn' => '978-9797807214',
+                'category' => 'Drama',
+                'synopsis' => 'Kisah hangat tentang perjuangan seorang bapak yang meninggalkan rekaman video pesan kehidupan sabtu mingguan untuk membimbing kedua anaknya tumbuh dewasa.',
+                'cover_image' => 'https://covers.openlibrary.org/b/isbn/9789797807214-L.jpg',
+            ],
+            [
+                'title' => 'Ronggeng Dukuh Paruk',
+                'author' => 'Ahmad Tohari',
+                'publisher' => 'Gramedia Pustaka Utama',
+                'year' => 1982,
+                'stock' => 4,
+                'language' => 'Indonesian',
+                'isbn' => '978-9792201963',
+                'category' => 'Drama',
+                'synopsis' => 'Kisah cinta tragis Srintil, seorang penari ronggeng, dan Rasus, teman masa kecilnya, dengan latar belakang konflik sosial politik tahun 1965.',
+                'cover_image' => 'https://covers.openlibrary.org/b/isbn/9789792201963-L.jpg',
+            ],
+
+            // === POETRY & SASTRA (PUISI) ===
+            [
+                'title' => 'Hujan Bulan Juni',
+                'author' => 'Sapardi Djoko Damono',
+                'publisher' => 'Gramedia Pustaka Utama',
+                'year' => 2015,
+                'stock' => 5,
+                'language' => 'Indonesian',
+                'isbn' => '978-6020318431',
+                'category' => 'Poetry',
+                'synopsis' => 'Kumpulan puisi legendaris karya Sapardi Djoko Damono yang romantis, melankolis, dan penuh perenungan makna kesabaran cinta.',
+                'cover_image' => 'https://covers.openlibrary.org/b/isbn/9786020318431-L.jpg',
+            ],
+            [
+                'title' => 'Tidak Ada New York Hari Ini',
+                'author' => 'M. Aan Mansyur',
+                'publisher' => 'Gramedia Pustaka Utama',
+                'year' => 2016,
+                'stock' => 5,
+                'language' => 'Indonesian',
+                'isbn' => '978-6020327129',
+                'category' => 'Poetry',
+                'synopsis' => 'Kumpulan puisi cinta Aan Mansyur yang menjadi bagian penting dari puisi-puisi Rangga dalam film Ada Apa dengan Cinta? 2.',
+                'cover_image' => 'https://covers.openlibrary.org/b/isbn/9786020327129-L.jpg',
             ],
         ];
 
-        foreach ($books as $book) {
-            Book::create($book);
+        // 2. Fetch data from Bukuacak API with local fallback
+        $seededCount = 0;
+        $useFallback = false;
+        $booksData = [];
+
+        try {
+            // Request 100 books from the Bukuacak API
+            $response = Http::timeout(10)->get('https://api.bukuacak.shabsolute.tech/api/v1/book', [
+                'limit' => 100,
+            ]);
+
+            if ($response->successful()) {
+                $data = $response->json();
+                $booksData = $data['books'] ?? [];
+                if (empty($booksData)) {
+                    $useFallback = true;
+                }
+            } else {
+                $useFallback = true;
+            }
+        } catch (\Exception $e) {
+            Log::warning('Gagal menghubungi API Bukuacak, menggunakan data lokal: ' . $e->getMessage());
+            $useFallback = true;
         }
+
+        if ($useFallback) {
+            Log::info('Melakukan seeding menggunakan data fallback lokal.');
+            foreach ($fallbackBooks as $localBook) {
+                $coverUrl = $localBook['cover_image'];
+                
+                try {
+                    // Cari data di Google Books API untuk mengambil cover yang lebih responsif jika ada
+                    $response = Http::timeout(4)->get('https://www.googleapis.com/books/v1/volumes', [
+                        'q' => 'isbn:' . str_replace('-', '', $localBook['isbn']),
+                    ]);
+
+                    if ($response->successful()) {
+                        $data = $response->json();
+                        $items = $data['items'] ?? [];
+                        if (count($items) > 0) {
+                            $volumeInfo = $items[0]['volumeInfo'] ?? [];
+                            $apiCover = $volumeInfo['imageLinks']['thumbnail'] ?? null;
+                            if ($apiCover) {
+                                $coverUrl = str_replace('http://', 'https://', $apiCover);
+                            }
+                        }
+                    }
+                } catch (\Exception $e) {
+                    Log::debug('Menggunakan cover lokal bawaan untuk ' . $localBook['title'] . ': ' . $e->getMessage());
+                }
+
+                // Simpan data novel
+                Book::create([
+                    'title' => $localBook['title'],
+                    'author' => $localBook['author'],
+                    'publisher' => $localBook['publisher'],
+                    'year' => $localBook['year'],
+                    'stock' => $localBook['stock'],
+                    'language' => $localBook['language'],
+                    'isbn' => $localBook['isbn'],
+                    'category' => $localBook['category'],
+                    'synopsis' => $localBook['synopsis'],
+                    'cover_image' => $coverUrl,
+                ]);
+                $seededCount++;
+            }
+        } else {
+            Log::info('Melakukan seeding menggunakan data dari API Bukuacak.');
+            foreach ($booksData as $apiBook) {
+                // Parse year from published_date
+                $year = 2024;
+                $publishedDate = $apiBook['details']['published_date'] ?? '';
+                if (preg_match('/\b(19\d\d|20\d\d)\b/', $publishedDate, $matches)) {
+                    $year = (int)$matches[1];
+                }
+
+                // Extract author name
+                $author = $apiBook['author']['name'] ?? 'Unknown Author';
+
+                // Extract category name
+                $category = $apiBook['category']['name'] ?? 'Umum';
+
+                // Extract ISBN
+                $isbn = $apiBook['details']['isbn'] ?? null;
+                if (!$isbn || $isbn === '0' || $isbn === '0.0') {
+                    $isbn = '978-' . rand(100, 999) . '-' . rand(100, 999) . '-' . rand(100, 999) . '-' . rand(0, 9);
+                }
+
+                Book::create([
+                    'title' => $apiBook['title'] ?? 'Untitled Book',
+                    'author' => $author,
+                    'publisher' => $apiBook['publisher'] ?? 'Gramedia Pustaka Utama',
+                    'year' => $year,
+                    'stock' => rand(1, 15),
+                    'language' => 'Indonesian',
+                    'isbn' => $isbn,
+                    'category' => $category,
+                    'synopsis' => $apiBook['summary'] ?? null,
+                    'cover_image' => $apiBook['cover_image'] ?? null,
+                ]);
+                $seededCount++;
+            }
+        }
+
+        Log::info("Berhasil melakukan seeding sebanyak {$seededCount} buku.");
     }
 }

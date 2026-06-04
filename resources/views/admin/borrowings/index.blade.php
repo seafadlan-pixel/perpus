@@ -8,7 +8,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <style>
         body { font-family: 'Inter', sans-serif; background-color: #f8fafc; color: #334155; }
-        .sidebar { background: #0f172a; min-height: 100vh; color: white; padding-top: 24px; box-shadow: 1px 0 0 #e2e8f0; }
+        .sidebar { background: #0f172a; min-height: 100vh; color: white; padding-top: 24px; box-shadow: 1px 0 0 #e2e8f0; display: flex; flex-direction: column; }
         .sidebar h4 { font-size: 1.1rem; font-weight: 700; color: #ffffff; letter-spacing: -0.02em; opacity: 0.95; }
         .sidebar a { color: #94a3b8; text-decoration: none; padding: 12px 24px; display: block; font-size: 0.875rem; font-weight: 500; transition: all 0.15s; }
         .sidebar a:hover, .sidebar a.active { background: #1e293b; color: white; }
@@ -185,16 +185,18 @@
 
 <div class="d-flex">
     <!-- Sidebar -->
-    <div class="sidebar" style="width: 250px;">
+    <div class="sidebar" style="width: 250px; position: sticky; top: 0; height: 100vh;">
         <h4 class="text-center mb-4">Library Admin</h4>
         <a href="{{ route('books.index') }}">📚 Book Management</a>
         <a href="{{ route('admin.borrowings.index') }}" class="active">📋 Borrowing Management</a>
         <a href="{{ route('admin.users.index') }}">👥 Member List</a>
         <a href="{{ route('public.index') }}">🌍 View Public Site</a>
-        <form action="{{ route('logout') }}" method="POST" class="mt-auto px-3 pb-4" style="position: absolute; bottom: 0; width: 250px;">
-            @csrf
-            <button type="submit" class="btn btn-danger w-100">Logout</button>
-        </form>
+        <div class="mt-auto px-3 pb-4">
+            <form action="{{ route('logout') }}" method="POST">
+                @csrf
+                <button type="submit" class="btn btn-danger w-100">Logout</button>
+            </form>
+        </div>
     </div>
 
     <!-- Main Content -->

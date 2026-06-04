@@ -18,6 +18,7 @@ class Borrowing extends Model
         'return_date',
         'status',
         'notes',
+        'fine_amount',
     ];
 
     protected $casts = [

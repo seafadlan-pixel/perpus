@@ -211,11 +211,41 @@
             <a class="navbar-brand" href="{{ route('public.index') }}">
                 📚 Lentera Pustaka
             </a>
-            <div class="d-flex align-items-center">
+            <div class="d-flex align-items-center gap-2">
                 <a href="{{ route('public.show', $book->id) }}" class="btn btn-outline-dark btn-sm rounded-3 px-3">← Kembali ke Detail</a>
+                @auth
+                    <!-- Dropdown Profil -->
+                    <div class="dropdown">
+                        <button class="btn btn-link p-0 border-0 dropdown-toggle d-flex align-items-center gap-2 text-decoration-none" type="button" data-bs-toggle="dropdown" style="color: #0f172a;">
+                            <img
+                                src="https://ui-avatars.com/api/?name={{ urlencode(auth()->user()->name) }}&background=0f172a&color=ffffff&size=80&rounded=true&bold=true"
+                                alt="{{ auth()->user()->name }}"
+                                style="width: 34px; height: 34px; border-radius: 50%; border: 2px solid #e2e8f0;"
+                            >
+                            <span style="font-size: 0.875rem; font-weight: 500;">{{ auth()->user()->name }}</span>
+                        </button>
+                        <ul class="dropdown-menu dropdown-menu-end shadow-sm border-0" style="border-radius: 10px; min-width: 200px; margin-top: 8px;">
+                            <li class="px-3 py-2 border-bottom">
+                                <div class="fw-semibold" style="font-size: 0.875rem;">{{ auth()->user()->name }}</div>
+                                <div class="text-muted" style="font-size: 0.78rem;">{{ auth()->user()->email }}</div>
+                                @if(auth()->user()->class)
+                                    <div class="text-muted" style="font-size: 0.78rem;">🏫 {{ auth()->user()->class }}</div>
+                                @endif
+                            </li>
+                            <li><a class="dropdown-item py-2" href="{{ route('borrow.my') }}" style="font-size: 0.875rem;">📋 Peminjaman Saya</a></li>
+                            <li>
+                                <form action="{{ route('logout') }}" method="POST" class="m-0">
+                                    @csrf
+                                    <button type="submit" class="dropdown-item py-2 text-danger" style="font-size: 0.875rem;">🚪 Logout</button>
+                                </form>
+                            </li>
+                        </ul>
+                    </div>
+                @endauth
             </div>
         </div>
     </nav>
+
 
     <div class="borrow-container">
         <div class="page-header">

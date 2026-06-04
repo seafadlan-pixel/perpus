@@ -223,17 +223,41 @@
             <a class="navbar-brand" href="{{ route('public.index') }}">
                 📚 Lentera Pustaka
             </a>
-            <div class="d-flex align-items-center">
+            <div class="d-flex align-items-center gap-2">
                 @auth
                     @if(auth()->user()->role === 'admin')
-                        <a href="/admin/books" class="btn btn-outline-dark btn-sm rounded-3 px-3 me-3">Library Admin</a>
+                        <a href="/admin/books" class="btn btn-outline-dark btn-sm rounded-3 px-3">Library Admin</a>
                     @endif
-                    <a href="{{ route('borrow.my') }}" class="btn btn-outline-dark btn-sm rounded-3 px-3 me-3">📋 Peminjaman Saya</a>
-                    <span class="me-3 text-secondary" style="font-size: 0.9rem;">{{ auth()->user()->name }}</span>
-                    <form action="{{ route('logout') }}" method="POST" class="m-0">
-                        @csrf
-                        <button type="submit" class="btn btn-sm btn-dark rounded-3 px-3">Logout</button>
-                    </form>
+
+                    <!-- User Profile Dropdown -->
+                    <div class="dropdown">
+                        <button class="btn btn-link p-0 border-0 dropdown-toggle d-flex align-items-center gap-2 text-decoration-none" type="button" data-bs-toggle="dropdown" style="color: #0f172a;">
+                            <img
+                                src="https://ui-avatars.com/api/?name={{ urlencode(auth()->user()->name) }}&background=0f172a&color=ffffff&size=80&rounded=true&bold=true"
+                                alt="{{ auth()->user()->name }}"
+                                style="width: 34px; height: 34px; border-radius: 50%; border: 2px solid #e2e8f0;"
+                            >
+                            <span style="font-size: 0.875rem; font-weight: 500;">{{ auth()->user()->name }}</span>
+                        </button>
+                        <ul class="dropdown-menu dropdown-menu-end shadow-sm border-0" style="border-radius: 10px; min-width: 200px; margin-top: 8px;">
+                            <li class="px-3 py-2 border-bottom">
+                                <div class="fw-semibold" style="font-size: 0.875rem;">{{ auth()->user()->name }}</div>
+                                <div class="text-muted" style="font-size: 0.78rem;">{{ auth()->user()->email }}</div>
+                                @if(auth()->user()->class)
+                                    <div class="text-muted" style="font-size: 0.78rem;">🏫 {{ auth()->user()->class }}</div>
+                                @endif
+                            </li>
+                            <li>
+                                <a class="dropdown-item py-2" href="{{ route('public.index') }}" style="font-size: 0.875rem;">📚 Katalog Buku</a>
+                            </li>
+                            <li>
+                                <form action="{{ route('logout') }}" method="POST" class="m-0">
+                                    @csrf
+                                    <button type="submit" class="dropdown-item py-2 text-danger" style="font-size: 0.875rem;">🚪 Logout</button>
+                                </form>
+                            </li>
+                        </ul>
+                    </div>
                 @endauth
             </div>
         </div>
@@ -255,6 +279,19 @@
             </div>
         @endif
 
+        @php $totalFine = $borrowings->sum('fine_amount'); @endphp
+        @if($totalFine > 0)
+            <div class="alert mb-4" style="background: #fef2f2; border: 1px solid #fecaca; border-radius: 10px; color: #991b1b;">
+                <div class="d-flex align-items-center justify-content-between">
+                    <div>
+                        <strong>⚠️ Kamu memiliki denda yang belum dibayar</strong>
+                        <div style="font-size: 0.875rem; margin-top: 3px;">Silakan hubungi petugas perpustakaan untuk menyelesaikan denda.</div>
+                    </div>
+                    <div style="font-size: 1.3rem; font-weight: 700;">Rp {{ number_format($totalFine, 0, ',', '.') }}</div>
+                </div>
+            </div>
+        @endif
+
         <div class="borrowing-card">
             @if($borrowings->count() > 0)
                 <table class="table">
@@ -266,6 +303,7 @@
                             <th>Jatuh Tempo</th>
                             <th>Dikembalikan</th>
                             <th>Status</th>
+                            <th>Denda</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -316,6 +354,15 @@
                                         <span class="badge-status badge-rejected">❌ Ditolak</span>
                                         @break
                                 @endswitch
+                            </td>
+                            <td>
+                                @if($borrowing->fine_amount > 0)
+                                    <span style="background: #fef2f2; color: #dc2626; border: 1px solid #fecaca; padding: 3px 9px; border-radius: 5px; font-size: 0.8rem; font-weight: 600;">
+                                        💰 Rp {{ number_format($borrowing->fine_amount, 0, ',', '.') }}
+                                    </span>
+                                @else
+                                    <span style="color: #94a3b8; font-size: 0.82rem;">—</span>
+                                @endif
                             </td>
                         </tr>
                         @endforeach

@@ -110,4 +110,22 @@ class AdminBorrowingController extends Controller
         return redirect()->route('admin.borrowings.index')
             ->with('success', 'Data peminjaman berhasil dihapus.');
     }
+
+    /**
+     * Perbarui jumlah denda peminjaman
+     */
+    public function updateFine(Request $request, $id)
+    {
+        $request->validate([
+            'fine_amount' => 'required|integer|min:0',
+        ]);
+
+        $borrowing = Borrowing::findOrFail($id);
+        $borrowing->update([
+            'fine_amount' => $request->fine_amount,
+        ]);
+
+        return redirect()->back()
+            ->with('success', 'Denda berhasil diperbarui.');
+    }
 }
