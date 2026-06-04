@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Peminjaman Saya - International Library</title>
+    <title>Peminjaman Saya - Lentera Pustaka</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
@@ -221,12 +221,12 @@
     <nav class="navbar navbar-expand-lg navbar-light fixed-top">
         <div class="container">
             <a class="navbar-brand" href="{{ route('public.index') }}">
-                📚 International Library
+                📚 Lentera Pustaka
             </a>
             <div class="d-flex align-items-center">
                 @auth
                     @if(auth()->user()->role === 'admin')
-                        <a href="/admin/books" class="btn btn-outline-dark btn-sm rounded-3 px-3 me-3">Dashboard</a>
+                        <a href="/admin/books" class="btn btn-outline-dark btn-sm rounded-3 px-3 me-3">Library Admin</a>
                     @endif
                     <a href="{{ route('borrow.my') }}" class="btn btn-outline-dark btn-sm rounded-3 px-3 me-3">📋 Peminjaman Saya</a>
                     <span class="me-3 text-secondary" style="font-size: 0.9rem;">{{ auth()->user()->name }}</span>

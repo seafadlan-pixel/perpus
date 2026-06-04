@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{{ $book->title }} - International Library</title>
+    <title>{{ $book->title }} - Lentera Pustaka</title>
     
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -105,7 +105,7 @@
     <nav class="navbar navbar-expand-lg navbar-light fixed-top">
         <div class="container">
             <a class="navbar-brand" href="{{ route('public.index') }}">
-                <i class="bi bi-arrow-left"></i> 🌎 International Library
+                <i class="bi bi-arrow-left"></i> 🌎 Lentera Pustaka
             </a>
             <div class="d-flex">
                 <a href="{{ route('public.index') }}" class="btn btn-outline-secondary rounded-pill px-4">Back to Catalog</a>

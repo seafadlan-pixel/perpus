@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Register - International Library</title>
+    <title>Register - Lentera Pustaka</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <style>
@@ -77,8 +77,8 @@
 <body>
 
     <div class="register-card">
-        <div class="brand-text">📚 International Library</div>
-        <div class="subtitle">Create a new account to explore our library</div>
+        <div class="brand-text">📚 Lentera Pustaka</div>
+        <div class="subtitle">Buat akun baru untuk mengakses perpustakaan</div>
         
         @if ($errors->any())
             <div class="alert alert-danger py-2 px-3 text-sm rounded-3">
@@ -93,13 +93,18 @@
         <form action="{{ route('register') }}" method="POST">
             @csrf
             <div class="mb-3">
-                <label class="form-label">Full Name</label>
+                <label class="form-label">Nama Lengkap</label>
                 <input type="text" name="name" class="form-control" value="{{ old('name') }}" required autofocus placeholder="John Doe">
             </div>
 
             <div class="mb-3">
-                <label class="form-label">Email Address</label>
+                <label class="form-label">Alamat Email</label>
                 <input type="email" name="email" class="form-control" value="{{ old('email') }}" required placeholder="name@example.com">
+            </div>
+
+            <div class="mb-3">
+                <label class="form-label">Kelas (Siswa)</label>
+                <input type="text" name="class" class="form-control" value="{{ old('class') }}" required placeholder="Contoh: XII RPL 1, XI IPA 2">
             </div>
             
             <div class="mb-3">
@@ -108,7 +113,7 @@
             </div>
 
             <div class="mb-4">
-                <label class="form-label">Confirm Password</label>
+                <label class="form-label">Konfirmasi Password</label>
                 <input type="password" name="password_confirmation" class="form-control" required placeholder="••••••••">
             </div>
             

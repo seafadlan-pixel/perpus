@@ -41,4 +41,7 @@ Route::prefix('admin')->middleware(['auth', \App\Http\Middleware\AdminMiddleware
     Route::patch('borrowings/{id}/reject', [AdminBorrowingController::class, 'reject'])->name('admin.borrowings.reject');
     Route::patch('borrowings/{id}/return', [AdminBorrowingController::class, 'returnBook'])->name('admin.borrowings.return');
     Route::delete('borrowings/{id}', [AdminBorrowingController::class, 'destroy'])->name('admin.borrowings.destroy');
+
+    // User Management
+    Route::get('users', [App\Http\Controllers\AdminUserController::class, 'index'])->name('admin.users.index');
 });

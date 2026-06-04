@@ -209,7 +209,7 @@
     <nav class="navbar navbar-expand-lg navbar-light fixed-top">
         <div class="container">
             <a class="navbar-brand" href="{{ route('public.index') }}">
-                📚 International Library
+                📚 Lentera Pustaka
             </a>
             <div class="d-flex align-items-center">
                 <a href="{{ route('public.show', $book->id) }}" class="btn btn-outline-dark btn-sm rounded-3 px-3">← Kembali ke Detail</a>

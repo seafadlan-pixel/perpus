@@ -189,7 +189,8 @@
         <h4 class="text-center mb-4">Library Admin</h4>
         <a href="{{ route('books.index') }}">📚 Book Management</a>
         <a href="{{ route('admin.borrowings.index') }}" class="active">📋 Borrowing Management</a>
-        <a href="{{ route('public.index') }}" target="_blank">🌍 View Public Site</a>
+        <a href="{{ route('admin.users.index') }}">👥 Member List</a>
+        <a href="{{ route('public.index') }}">🌍 View Public Site</a>
         <form action="{{ route('logout') }}" method="POST" class="mt-auto px-3 pb-4" style="position: absolute; bottom: 0; width: 250px;">
             @csrf
             <button type="submit" class="btn btn-danger w-100">Logout</button>
@@ -270,6 +271,11 @@
                                 <div class="borrower-info">
                                     <div class="name">{{ $borrowing->borrower_name }}</div>
                                     <div class="phone">📞 {{ $borrowing->borrower_phone }}</div>
+                                    @if($borrowing->user && $borrowing->user->class)
+                                        <div style="margin-top: 4px;">
+                                            <span class="badge-status badge-approved" style="padding: 2px 6px; font-size: 0.7rem;">🏫 {{ $borrowing->user->class }}</span>
+                                        </div>
+                                    @endif
                                 </div>
                             </td>
                             <td>
