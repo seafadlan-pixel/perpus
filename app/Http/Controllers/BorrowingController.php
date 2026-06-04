@@ -15,6 +15,10 @@ class BorrowingController extends Controller
      */
     public function create($bookId)
     {
+        if (Auth::user()->role === 'admin') {
+            abort(403, 'Admin tidak diperbolehkan meminjam buku.');
+        }
+
         $book = Book::findOrFail($bookId);
 
         if ($book->stock <= 0) {
@@ -30,6 +34,10 @@ class BorrowingController extends Controller
      */
     public function store(Request $request)
     {
+        if (Auth::user()->role === 'admin') {
+            abort(403, 'Admin tidak diperbolehkan meminjam buku.');
+        }
+
         $request->validate([
             'book_id' => 'required|exists:books,id',
             'borrower_name' => 'required|string|max:255',

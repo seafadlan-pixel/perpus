@@ -177,8 +177,9 @@
                 @auth
                     @if(auth()->user()->role === 'admin')
                         <a href="/admin/books" class="btn btn-outline-dark btn-sm rounded-3 px-3">Library Admin</a>
+                    @else
+                        <a href="{{ route('borrow.my') }}" class="btn btn-outline-dark btn-sm rounded-3 px-3">📋 Peminjaman Saya</a>
                     @endif
-                    <a href="{{ route('borrow.my') }}" class="btn btn-outline-dark btn-sm rounded-3 px-3">📋 Peminjaman Saya</a>
 
                     <!-- User Profile Dropdown -->
                     <div class="dropdown">
@@ -198,9 +199,11 @@
                                     <div class="text-muted" style="font-size: 0.78rem;">🏫 {{ auth()->user()->class }}</div>
                                 @endif
                             </li>
-                            <li>
-                                <a class="dropdown-item py-2" href="{{ route('borrow.my') }}" style="font-size: 0.875rem;">📋 Peminjaman Saya</a>
-                            </li>
+                            @if(auth()->user()->role !== 'admin')
+                                <li>
+                                    <a class="dropdown-item py-2" href="{{ route('borrow.my') }}" style="font-size: 0.875rem;">📋 Peminjaman Saya</a>
+                                </li>
+                            @endif
                             <li>
                                 <form action="{{ route('logout') }}" method="POST" class="m-0">
                                     @csrf

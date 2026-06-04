@@ -110,7 +110,11 @@
             <div class="d-flex align-items-center gap-2">
                 <a href="{{ route('public.index') }}" class="btn btn-outline-secondary btn-sm rounded-pill px-4">← Katalog</a>
                 @auth
-                    <a href="{{ route('borrow.my') }}" class="btn btn-outline-dark btn-sm rounded-3 px-3">📋 Peminjaman</a>
+                    @if(auth()->user()->role === 'admin')
+                        <a href="/admin/books" class="btn btn-outline-dark btn-sm rounded-3 px-3">Library Admin</a>
+                    @else
+                        <a href="{{ route('borrow.my') }}" class="btn btn-outline-dark btn-sm rounded-3 px-3">📋 Peminjaman</a>
+                    @endif
                     <!-- Dropdown Profil -->
                     <div class="dropdown">
                         <button class="btn btn-link p-0 border-0 dropdown-toggle d-flex align-items-center gap-2 text-decoration-none" type="button" data-bs-toggle="dropdown" style="color: #0f172a;">
@@ -129,7 +133,9 @@
                                     <div class="text-muted" style="font-size: 0.78rem;">🏫 {{ auth()->user()->class }}</div>
                                 @endif
                             </li>
-                            <li><a class="dropdown-item py-2" href="{{ route('borrow.my') }}" style="font-size: 0.875rem;">📋 Peminjaman Saya</a></li>
+                            @if(auth()->user()->role !== 'admin')
+                                <li><a class="dropdown-item py-2" href="{{ route('borrow.my') }}" style="font-size: 0.875rem;">📋 Peminjaman Saya</a></li>
+                            @endif
                             <li>
                                 <form action="{{ route('logout') }}" method="POST" class="m-0">
                                     @csrf
@@ -198,14 +204,20 @@
                         @endif
 
                         <div class="mt-4 pt-3" style="border-top: 2px solid #e9ecef;">
-                            @if($book->stock > 0)
-                                <a href="{{ route('borrow.create', $book->id) }}" class="btn btn-lg btn-dark rounded-pill px-5 py-3" style="font-weight: 600;">
-                                    📥 Pinjam Buku Ini
-                                </a>
+                            @if(auth()->user()->role !== 'admin')
+                                @if($book->stock > 0)
+                                    <a href="{{ route('borrow.create', $book->id) }}" class="btn btn-lg btn-dark rounded-pill px-5 py-3" style="font-weight: 600;">
+                                        📥 Pinjam Buku Ini
+                                    </a>
+                                @else
+                                    <button class="btn btn-lg btn-secondary rounded-pill px-5 py-3" disabled style="font-weight: 600;">
+                                        📛 Stok Habis
+                                    </button>
+                                @endif
                             @else
-                                <button class="btn btn-lg btn-secondary rounded-pill px-5 py-3" disabled style="font-weight: 600;">
-                                    📛 Stok Habis
-                                </button>
+                                <div class="alert alert-info m-0" role="alert">
+                                    ℹ️ Sebagai Admin, Anda tidak dapat melakukan peminjaman buku.
+                                </div>
                             @endif
                         </div>
                     @endauth
