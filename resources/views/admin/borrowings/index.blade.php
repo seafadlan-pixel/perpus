@@ -179,6 +179,37 @@
             font-size: 0.7rem;
             font-weight: 500;
         }
+
+        .btn-borrow-admin {
+            background: linear-gradient(135deg, #0f172a, #1e3a5f);
+            color: white;
+            text-decoration: none;
+            border-radius: 8px;
+            padding: 10px 20px;
+            font-size: 0.82rem;
+            font-weight: 600;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            transition: all 0.2s;
+            border: none;
+        }
+
+        .btn-borrow-admin:hover {
+            color: white;
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(15, 23, 42, 0.3);
+        }
+
+        .admin-direct-badge {
+            background: #ecfdf5;
+            color: #047857;
+            border: 1px solid #a7f3d0;
+            padding: 2px 7px;
+            border-radius: 4px;
+            font-size: 0.68rem;
+            font-weight: 600;
+        }
     </style>
 </head>
 <body>
@@ -204,6 +235,9 @@
 
         <div class="d-flex justify-content-between align-items-center mb-4">
             <h2>Borrowing Management</h2>
+            <a href="{{ route('admin.borrowings.create') }}" class="btn-borrow-admin">
+                ⚡ Pinjamkan Buku ke Member
+            </a>
         </div>
 
         @if(session('success'))
@@ -276,6 +310,11 @@
                                     @if($borrowing->user && $borrowing->user->class)
                                         <div style="margin-top: 4px;">
                                             <span class="badge-status badge-approved" style="padding: 2px 6px; font-size: 0.7rem;">🏫 {{ $borrowing->user->class }}</span>
+                                        </div>
+                                    @endif
+                                    @if(str_starts_with($borrowing->notes ?? '', '[via:admin]'))
+                                        <div style="margin-top: 4px;">
+                                            <span class="admin-direct-badge">⚙️ Input Admin</span>
                                         </div>
                                     @endif
                                 </div>

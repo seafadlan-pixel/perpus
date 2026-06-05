@@ -215,9 +215,11 @@
                                     </button>
                                 @endif
                             @else
-                                <div class="alert alert-info m-0" role="alert">
-                                    ℹ️ Sebagai Admin, Anda tidak dapat melakukan peminjaman buku.
-                                </div>
+                                <a href="{{ route('admin.borrowings.create') }}?book_id={{ $book->id }}"
+                                   class="btn btn-lg btn-dark rounded-pill px-5 py-3"
+                                   style="font-weight: 600;">
+                                    ⚡ Pinjamkan Buku ke Member
+                                </a>
                             @endif
                         </div>
                     @endauth

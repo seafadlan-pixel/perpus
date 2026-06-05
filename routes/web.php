@@ -37,6 +37,8 @@ Route::prefix('admin')->middleware(['auth', \App\Http\Middleware\AdminMiddleware
 
     // Borrowing Management
     Route::get('borrowings', [AdminBorrowingController::class, 'index'])->name('admin.borrowings.index');
+    Route::get('borrowings/create', [AdminBorrowingController::class, 'createForAdmin'])->name('admin.borrowings.create');
+    Route::post('borrowings/create', [AdminBorrowingController::class, 'storeForAdmin'])->name('admin.borrowings.store');
     Route::patch('borrowings/{id}/approve', [AdminBorrowingController::class, 'approve'])->name('admin.borrowings.approve');
     Route::patch('borrowings/{id}/reject', [AdminBorrowingController::class, 'reject'])->name('admin.borrowings.reject');
     Route::patch('borrowings/{id}/return', [AdminBorrowingController::class, 'returnBook'])->name('admin.borrowings.return');
