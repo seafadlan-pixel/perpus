@@ -49,6 +49,17 @@ class WebAuthController extends Controller
         if (Auth::attempt($credentials)) {
             $request->session()->regenerate();
 
+            // Cek apakah akun aktif
+            if (!Auth::user()->is_active) {
+                Auth::logout();
+                $request->session()->invalidate();
+                $request->session()->regenerateToken();
+
+                return back()->withErrors([
+                    'email' => 'Akun Anda telah dinonaktifkan oleh admin. Hubungi pustakawan untuk informasi lebih lanjut.',
+                ])->onlyInput('email');
+            }
+
             if (Auth::user()->role === 'admin') {
                 return redirect()->intended('/admin/books');
             }
@@ -57,7 +68,7 @@ class WebAuthController extends Controller
         }
 
         return back()->withErrors([
-            'email' => 'The provided credentials do not match our records.',
+            'email' => 'Email atau password yang Anda masukkan tidak sesuai.',
         ])->onlyInput('email');
     }
 

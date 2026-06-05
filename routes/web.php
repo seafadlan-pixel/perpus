@@ -47,4 +47,5 @@ Route::prefix('admin')->middleware(['auth', \App\Http\Middleware\AdminMiddleware
 
     // User Management
     Route::get('users', [App\Http\Controllers\AdminUserController::class, 'index'])->name('admin.users.index');
+    Route::patch('users/{user}/toggle-active', [App\Http\Controllers\AdminUserController::class, 'toggleActive'])->name('admin.users.toggle_active');
 });

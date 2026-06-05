@@ -18,6 +18,8 @@
         .badge-status { padding: 4px 10px; border-radius: 6px; font-size: 0.75rem; font-weight: 500; display: inline-block; }
         .badge-class { background-color: #eff6ff; color: #1d4ed8; border: 1px solid #bfdbfe; }
         .badge-role { background-color: #f1f5f9; color: #475569; border: 1px solid #e2e8f0; }
+        .badge-active { background-color: #dcfce7; color: #15803d; border: 1px solid #bbf7d0; }
+        .badge-inactive { background-color: #fee2e2; color: #b91c1c; border: 1px solid #fecaca; }
 
         .table thead th {
             font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.05em;
@@ -25,6 +27,7 @@
         }
         .table tbody td { vertical-align: middle; font-size: 0.875rem; padding: 16px 20px; border-bottom: 1px solid #f1f5f9; }
         .table tbody tr:last-child td { border-bottom: none; }
+        .table tbody tr.row-inactive { background: #fafafa; opacity: 0.75; }
 
         .avatar-sm { width: 36px; height: 36px; border-radius: 50%; object-fit: cover; }
 
@@ -36,6 +39,11 @@
         .btn-fine { background: linear-gradient(135deg, #f59e0b, #d97706); color: white; border: none; font-size: 0.8rem; padding: 5px 12px; border-radius: 6px; font-weight: 500; transition: all 0.2s; }
         .btn-fine:hover { background: linear-gradient(135deg, #d97706, #b45309); color: white; transform: translateY(-1px); }
 
+        .btn-deactivate { background: linear-gradient(135deg, #ef4444, #dc2626); color: white; border: none; font-size: 0.78rem; padding: 5px 12px; border-radius: 6px; font-weight: 500; transition: all 0.2s; cursor: pointer; }
+        .btn-deactivate:hover { background: linear-gradient(135deg, #dc2626, #b91c1c); color: white; transform: translateY(-1px); box-shadow: 0 2px 8px rgba(220,38,38,0.3); }
+        .btn-activate { background: linear-gradient(135deg, #22c55e, #16a34a); color: white; border: none; font-size: 0.78rem; padding: 5px 12px; border-radius: 6px; font-weight: 500; transition: all 0.2s; cursor: pointer; }
+        .btn-activate:hover { background: linear-gradient(135deg, #16a34a, #15803d); color: white; transform: translateY(-1px); box-shadow: 0 2px 8px rgba(22,163,74,0.3); }
+
         .status-pill { display: inline-flex; align-items: center; gap: 5px; padding: 3px 10px; border-radius: 20px; font-size: 0.75rem; font-weight: 500; }
         .status-pending { background: #fef9c3; color: #a16207; }
         .status-approved { background: #dcfce7; color: #15803d; }
@@ -43,6 +51,11 @@
         .status-rejected { background: #fee2e2; color: #b91c1c; }
 
         .alert-flash { border-radius: 10px; font-size: 0.875rem; }
+
+        /* Stats cards */
+        .stat-card { background: white; border: 1px solid #e2e8f0; border-radius: 10px; padding: 20px 24px; }
+        .stat-number { font-size: 1.8rem; font-weight: 700; color: #0f172a; line-height: 1; }
+        .stat-label { font-size: 0.8rem; color: #64748b; margin-top: 4px; }
     </style>
 </head>
 <body>
@@ -80,10 +93,29 @@
         <div class="d-flex justify-content-between align-items-center mb-4">
             <div>
                 <h2 class="mb-0">Daftar Anggota / Siswa</h2>
-                <p class="text-muted mt-1 mb-0" style="font-size: 0.9rem;">Kelola anggota dan denda peminjaman</p>
+                <p class="text-muted mt-1 mb-0" style="font-size: 0.9rem;">Kelola anggota, status akun, dan denda peminjaman</p>
             </div>
-            <div class="text-muted" style="font-size: 0.9rem;">
-                <strong>{{ $users->count() }}</strong> Anggota Terdaftar
+        </div>
+
+        <!-- Stat Cards -->
+        <div class="row g-3 mb-4">
+            <div class="col-md-4">
+                <div class="stat-card">
+                    <div class="stat-number">{{ $users->count() }}</div>
+                    <div class="stat-label">👥 Total Anggota</div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="stat-card">
+                    <div class="stat-number" style="color: #16a34a;">{{ $users->where('is_active', true)->count() }}</div>
+                    <div class="stat-label">✅ Akun Aktif</div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="stat-card">
+                    <div class="stat-number" style="color: #dc2626;">{{ $users->where('is_active', false)->count() }}</div>
+                    <div class="stat-label">🚫 Akun Dinonaktifkan</div>
+                </div>
             </div>
         </div>
 
@@ -97,7 +129,7 @@
                             <th>Anggota</th>
                             <th>Email</th>
                             <th>Kelas</th>
-                            <th>Role</th>
+                            <th>Status Akun</th>
                             <th>Peminjaman</th>
                             <th>Terdaftar</th>
                             <th class="text-center">Aksi</th>
@@ -105,16 +137,21 @@
                     </thead>
                     <tbody>
                         @forelse ($users as $user)
-                        <tr>
+                        <tr class="{{ !$user->is_active ? 'row-inactive' : '' }}">
                             <td class="ps-4 text-muted">{{ $loop->iteration }}</td>
                             <td>
                                 <div class="d-flex align-items-center gap-2">
                                     <img
-                                        src="https://ui-avatars.com/api/?name={{ urlencode($user->name) }}&background=0f172a&color=ffffff&size=72&rounded=true&bold=true"
+                                        src="https://ui-avatars.com/api/?name={{ urlencode($user->name) }}&background={{ $user->is_active ? '0f172a' : '94a3b8' }}&color=ffffff&size=72&rounded=true&bold=true"
                                         alt="{{ $user->name }}"
                                         class="avatar-sm"
                                     >
-                                    <span class="fw-semibold text-dark">{{ $user->name }}</span>
+                                    <div>
+                                        <span class="fw-semibold {{ $user->is_active ? 'text-dark' : 'text-muted' }}">{{ $user->name }}</span>
+                                        @if(!$user->is_active)
+                                            <div style="font-size: 0.7rem; color: #ef4444;">🚫 Akun dinonaktifkan</div>
+                                        @endif
+                                    </div>
                                 </div>
                             </td>
                             <td class="text-muted">{{ $user->email }}</td>
@@ -126,7 +163,11 @@
                                 @endif
                             </td>
                             <td>
-                                <span class="badge-status badge-role">{{ ucfirst($user->role) }}</span>
+                                @if($user->is_active)
+                                    <span class="badge-status badge-active">✅ Aktif</span>
+                                @else
+                                    <span class="badge-status badge-inactive">🚫 Nonaktif</span>
+                                @endif
                             </td>
                             <td>
                                 @php
@@ -146,15 +187,34 @@
                             </td>
                             <td class="text-muted" style="font-size: 0.82rem;">{{ $user->created_at->format('d M Y') }}</td>
                             <td class="text-center">
-                                <button
-                                    type="button"
-                                    class="btn btn-sm btn-outline-dark rounded-3 px-3"
-                                    style="font-size: 0.8rem;"
-                                    data-bs-toggle="modal"
-                                    data-bs-target="#modalUser{{ $user->id }}"
-                                >
-                                    📋 Peminjaman & Denda
-                                </button>
+                                <div class="d-flex gap-2 justify-content-center flex-wrap">
+                                    <!-- Tombol lihat peminjaman -->
+                                    <button
+                                        type="button"
+                                        class="btn btn-sm btn-outline-dark rounded-3 px-3"
+                                        style="font-size: 0.78rem;"
+                                        data-bs-toggle="modal"
+                                        data-bs-target="#modalUser{{ $user->id }}"
+                                    >
+                                        📋 Peminjaman
+                                    </button>
+
+                                    <!-- Tombol aktif/nonaktif -->
+                                    <form action="{{ route('admin.users.toggle_active', $user) }}" method="POST" class="d-inline"
+                                          onsubmit="return confirm('{{ $user->is_active ? 'Nonaktifkan akun ' . $user->name . '? Member tidak akan bisa login.' : 'Aktifkan kembali akun ' . $user->name . '?' }}')">
+                                        @csrf
+                                        @method('PATCH')
+                                        @if($user->is_active)
+                                            <button type="submit" class="btn-deactivate rounded-3 px-3">
+                                                🚫 Nonaktifkan
+                                            </button>
+                                        @else
+                                            <button type="submit" class="btn-activate rounded-3 px-3">
+                                                ✅ Aktifkan
+                                            </button>
+                                        @endif
+                                    </form>
+                                </div>
                             </td>
                         </tr>
                         @empty
@@ -192,6 +252,9 @@
                     <div>
                         <h5 class="modal-title text-white mb-0 fw-bold" id="modalUser{{ $user->id }}Label">
                             {{ $user->name }}
+                            @if(!$user->is_active)
+                                <span style="font-size: 0.75rem; background: #ef4444; padding: 2px 8px; border-radius: 6px; margin-left: 8px;">🚫 Nonaktif</span>
+                            @endif
                         </h5>
                         <div class="text-secondary" style="font-size: 0.82rem;">{{ $user->email }} · {{ $user->class ?? 'Tanpa kelas' }}</div>
                     </div>
@@ -319,6 +382,17 @@
             </div>
 
             <div class="modal-footer" style="background: #f8fafc; border-radius: 0 0 14px 14px; border-top: 1px solid #e2e8f0; padding: 16px 24px;">
+                <!-- Quick toggle dari modal -->
+                <form action="{{ route('admin.users.toggle_active', $user) }}" method="POST" class="me-auto"
+                      onsubmit="return confirm('{{ $user->is_active ? 'Nonaktifkan akun ' . $user->name . '?' : 'Aktifkan kembali akun ' . $user->name . '?' }}')">
+                    @csrf
+                    @method('PATCH')
+                    @if($user->is_active)
+                        <button type="submit" class="btn-deactivate rounded-3 px-4" style="padding: 8px 16px;">🚫 Nonaktifkan Akun Ini</button>
+                    @else
+                        <button type="submit" class="btn-activate rounded-3 px-4" style="padding: 8px 16px;">✅ Aktifkan Kembali</button>
+                    @endif
+                </form>
                 <button type="button" class="btn btn-outline-secondary btn-sm rounded-3 px-4" data-bs-dismiss="modal">Tutup</button>
             </div>
 
