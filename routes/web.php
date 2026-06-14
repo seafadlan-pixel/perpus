@@ -13,6 +13,7 @@ Route::middleware('guest')->group(function () {
     Route::post('/login', [WebAuthController::class, 'login']);
     Route::get('/register', [WebAuthController::class, 'showRegisterForm'])->name('register');
     Route::post('/register', [WebAuthController::class, 'register']);
+    Route::get('/forgot-password', [WebAuthController::class, 'showForgotPassword'])->name('password.forgot');
 });
 Route::post('/logout', [WebAuthController::class, 'logout'])->name('logout');
 
@@ -48,4 +49,5 @@ Route::prefix('admin')->middleware(['auth', \App\Http\Middleware\AdminMiddleware
     // User Management
     Route::get('users', [App\Http\Controllers\AdminUserController::class, 'index'])->name('admin.users.index');
     Route::patch('users/{user}/toggle-active', [App\Http\Controllers\AdminUserController::class, 'toggleActive'])->name('admin.users.toggle_active');
+    Route::patch('users/{user}/reset-password', [App\Http\Controllers\AdminUserController::class, 'resetPassword'])->name('admin.users.reset_password');
 });

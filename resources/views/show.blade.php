@@ -97,6 +97,30 @@
             color: #444;
             font-size: 1.1rem;
         }
+
+        /* Responsive Media Queries */
+        @media (max-width: 768px) {
+            .book-cover-large {
+                height: 320px !important;
+            }
+            .detail-content {
+                padding: 24px !important;
+            }
+            .book-title {
+                font-size: 1.8rem !important;
+                margin-top: 10px !important;
+            }
+            .book-detail-card {
+                margin-top: 80px !important;
+                margin-bottom: 30px !important;
+                border-radius: 12px !important;
+            }
+        }
+        @media (max-width: 576px) {
+            .navbar button span {
+                display: none !important;
+            }
+        }
     </style>
 </head>
 <body>

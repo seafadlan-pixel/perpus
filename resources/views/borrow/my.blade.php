@@ -214,6 +214,27 @@
             color: #dc2626;
             font-weight: 600;
         }
+
+        /* Responsive Media Queries */
+        @media (max-width: 576px) {
+            .navbar-brand {
+                font-size: 1rem !important;
+            }
+            .navbar button span {
+                display: none !important;
+            }
+            .navbar .btn-sm {
+                padding: 6px 10px !important;
+                font-size: 0.75rem !important;
+            }
+            .main-container {
+                margin-top: 80px !important;
+                padding: 0 16px !important;
+            }
+            .page-header h1 {
+                font-size: 1.4rem !important;
+            }
+        }
     </style>
 </head>
 <body>
@@ -279,8 +300,32 @@
             </div>
         @endif
 
-        @php $totalFine = $borrowings->sum('fine_amount'); @endphp
-        @if($totalFine > 0)
+        @if(isset($overdueItems) && $overdueItems->count() > 0)
+            <div class="alert mb-4" style="background: #fef2f2; border: 1px solid #fecaca; border-radius: 12px; padding: 0; overflow: hidden;">
+                <div style="background: linear-gradient(135deg, #dc2626, #b91c1c); padding: 14px 20px; color: white;">
+                    <strong style="font-size: 0.95rem;">⚠️ Peringatan: {{ $overdueItems->count() }} Buku Terlambat Dikembalikan</strong>
+                    <div style="font-size: 0.8rem; opacity: 0.9; margin-top: 3px;">Denda bertambah Rp 2.000 setiap hari sejak jatuh tempo.</div>
+                </div>
+                <div style="padding: 14px 20px;">
+                    @foreach($overdueItems as $item)
+                    <div style="display: flex; justify-content: space-between; align-items: center; padding: 8px 0; border-bottom: 1px solid #fecaca;">
+                        <div>
+                            <div style="font-weight: 600; color: #0f172a; font-size: 0.875rem;">📕 {{ $item['title'] }}</div>
+                            <div style="font-size: 0.78rem; color: #64748b; margin-top: 2px;">Jatuh tempo: {{ $item['due_date'] }} &nbsp;·&nbsp; <strong style="color: #dc2626;">{{ $item['days_late'] }} hari terlambat</strong></div>
+                        </div>
+                        <div style="font-weight: 700; color: #dc2626; font-size: 0.9rem; white-space: nowrap; margin-left: 16px;">
+                            Rp {{ number_format($item['fine'], 0, ',', '.') }}
+                        </div>
+                    </div>
+                    @endforeach
+                    <div style="display: flex; justify-content: space-between; align-items: center; padding-top: 10px;">
+                        <span style="font-size: 0.85rem; color: #64748b;">Total denda terkumulasi</span>
+                        <span style="font-size: 1.1rem; font-weight: 700; color: #dc2626;">Rp {{ number_format($overdueItems->sum('fine'), 0, ',', '.') }}</span>
+                    </div>
+                </div>
+            </div>
+        @elseif($borrowings->sum('fine_amount') > 0)
+            @php $totalFine = $borrowings->sum('fine_amount'); @endphp
             <div class="alert mb-4" style="background: #fef2f2; border: 1px solid #fecaca; border-radius: 10px; color: #991b1b;">
                 <div class="d-flex align-items-center justify-content-between">
                     <div>
@@ -294,7 +339,8 @@
 
         <div class="borrowing-card">
             @if($borrowings->count() > 0)
-                <table class="table">
+                <div class="table-responsive">
+                    <table class="table">
                     <thead>
                         <tr>
                             <th>No</th>
@@ -368,6 +414,7 @@
                         @endforeach
                     </tbody>
                 </table>
+                </div>
             @else
                 <div class="empty-state">
                     <div class="empty-state-icon">📚</div>

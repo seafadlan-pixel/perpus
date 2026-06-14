@@ -63,6 +63,10 @@
             color: #334155;
             font-size: 0.9rem;
         }
+        @media (max-width: 480px) {
+            body { padding: 0 16px; }
+            .login-card { padding: 28px 20px; }
+        }
     </style>
 </head>
 <body>
@@ -95,7 +99,10 @@
             </div>
             
             <div class="mb-4">
-                <label class="form-label">Password</label>
+                <div class="d-flex justify-content-between align-items-center mb-1">
+                    <label class="form-label mb-0">Password</label>
+                    <a href="{{ route('password.forgot') }}" style="font-size: 0.82rem; color: #3b82f6; text-decoration: none; font-weight: 500;" onmouseover="this.style.textDecoration='underline'" onmouseout="this.style.textDecoration='none'">Lupa Password?</a>
+                </div>
                 <input type="password" name="password" class="form-control" required placeholder="••••••••">
             </div>
             

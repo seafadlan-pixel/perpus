@@ -164,6 +164,272 @@
             font-weight: 700;
             color: #0f172a !important;
         }
+
+        /* Overdue Warning Modal */
+        .overdue-modal-backdrop {
+            position: fixed; inset: 0;
+            background: rgba(0,0,0,0.55);
+            z-index: 9999;
+            display: flex; align-items: center; justify-content: center;
+            padding: 20px;
+        }
+        .overdue-modal {
+            background: #fff;
+            border-radius: 18px;
+            max-width: 520px;
+            width: 100%;
+            box-shadow: 0 25px 60px rgba(0,0,0,0.25);
+            overflow: hidden;
+            animation: modalSlideIn 0.35s cubic-bezier(.4,0,.2,1);
+        }
+        @keyframes modalSlideIn {
+            from { opacity: 0; transform: translateY(-24px) scale(0.97); }
+            to   { opacity: 1; transform: translateY(0) scale(1); }
+        }
+        .overdue-modal-header {
+            background: linear-gradient(135deg, #dc2626, #b91c1c);
+            padding: 24px 28px 20px;
+            color: white;
+        }
+        .overdue-modal-header h4 { font-size: 1.1rem; font-weight: 700; margin: 0; }
+        .overdue-modal-header p  { font-size: 0.85rem; margin: 6px 0 0; opacity: 0.9; }
+        .overdue-modal-body { padding: 20px 28px; }
+        .overdue-book-item {
+            display: flex; align-items: flex-start; gap: 12px;
+            padding: 12px 14px;
+            background: #fef2f2;
+            border: 1px solid #fecaca;
+            border-radius: 10px;
+            margin-bottom: 10px;
+        }
+        .overdue-book-item:last-child { margin-bottom: 0; }
+        .overdue-icon { font-size: 1.5rem; flex-shrink: 0; line-height: 1; margin-top: 2px; }
+        .overdue-book-title { font-weight: 600; color: #0f172a; font-size: 0.9rem; }
+        .overdue-book-meta { font-size: 0.8rem; color: #64748b; margin-top: 2px; }
+        .overdue-fine { font-size: 0.82rem; font-weight: 600; color: #dc2626; margin-top: 4px; }
+        .overdue-total-box {
+            background: #1e293b;
+            border-radius: 10px;
+            padding: 14px 18px;
+            margin-top: 16px;
+            display: flex; justify-content: space-between; align-items: center;
+        }
+        .overdue-total-box span:first-child { color: #94a3b8; font-size: 0.85rem; }
+        .overdue-total-box span:last-child  { color: #f87171; font-size: 1.1rem; font-weight: 700; }
+        .overdue-modal-footer { padding: 16px 28px 24px; text-align: center; }
+        .btn-overdue-close {
+            background: #dc2626; color: white; border: none;
+            padding: 10px 32px; border-radius: 8px; font-weight: 600; font-size: 0.9rem;
+            cursor: pointer; transition: background 0.15s;
+        }
+        .btn-overdue-close:hover { background: #b91c1c; }
+        .btn-overdue-secondary {
+            background: none; border: 1px solid #e2e8f0; color: #64748b;
+            padding: 10px 20px; border-radius: 8px; font-weight: 500; font-size: 0.85rem;
+            cursor: pointer; transition: all 0.15s; margin-right: 8px;
+            text-decoration: none; display: inline-block;
+        }
+        .btn-overdue-secondary:hover { background: #f8fafc; color: #334155; }
+
+        /* Recommendation Section Premium Styling */
+        .recommendation-container {
+            background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
+            border: 1px solid #e2e8f0;
+            border-radius: 24px;
+            padding: 30px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .recommendation-container::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            right: -20%;
+            width: 300px;
+            height: 300px;
+            background: radial-gradient(circle, rgba(99, 102, 241, 0.08) 0%, rgba(255, 255, 255, 0) 70%);
+            border-radius: 50%;
+            pointer-events: none;
+        }
+
+        .recommendation-container::after {
+            content: '';
+            position: absolute;
+            bottom: -50%;
+            left: -20%;
+            width: 350px;
+            height: 350px;
+            background: radial-gradient(circle, rgba(168, 85, 247, 0.08) 0%, rgba(255, 255, 255, 0) 70%);
+            border-radius: 50%;
+            pointer-events: none;
+        }
+
+        .badge-recom {
+            background: linear-gradient(135deg, #4f46e5, #7c3aed);
+            color: white;
+            font-size: 0.75rem;
+            font-weight: 700;
+            padding: 6px 14px;
+            border-radius: 50px;
+            letter-spacing: 0.05em;
+            display: inline-block;
+            box-shadow: 0 4px 12px rgba(79, 70, 229, 0.2);
+        }
+
+        .recommendation-title {
+            font-weight: 800;
+            font-size: 1.75rem;
+            color: #0f172a;
+            letter-spacing: -0.02em;
+        }
+
+        .recommendation-subtitle {
+            font-size: 0.95rem;
+        }
+
+        .recom-card {
+            display: block;
+            text-decoration: none;
+            color: inherit;
+            height: 100%;
+            border-radius: 16px;
+            overflow: hidden;
+            background: white;
+            border: 1px solid #f1f5f9;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.03), 0 2px 4px -1px rgba(0, 0, 0, 0.03);
+        }
+
+        .recom-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.08), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+            border-color: #e2e8f0;
+        }
+
+        .recom-card-inner {
+            display: flex;
+            flex-direction: column;
+            height: 100%;
+        }
+
+        .recom-cover-wrapper {
+            position: relative;
+            padding-top: 60%; /* 5:3 Aspect Ratio */
+            overflow: hidden;
+            background-color: #f8fafc;
+            border-bottom: 1px solid #f1f5f9;
+        }
+
+        .recom-cover {
+            position: absolute;
+            inset: 0;
+            background-size: cover;
+            background-position: center;
+            transition: transform 0.5s ease;
+        }
+
+        .recom-card:hover .recom-cover {
+            transform: scale(1.06);
+        }
+
+        .recom-category {
+            position: absolute;
+            top: 12px;
+            left: 12px;
+            background: rgba(15, 23, 42, 0.75);
+            backdrop-filter: blur(4px);
+            color: white;
+            padding: 4px 10px;
+            border-radius: 6px;
+            font-size: 0.7rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.02em;
+        }
+
+        .recom-info {
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            flex-grow: 1;
+        }
+
+        .recom-title {
+            font-weight: 700;
+            font-size: 1.15rem;
+            margin-bottom: 6px;
+            color: #0f172a;
+            transition: color 0.2s ease;
+        }
+
+        .recom-card:hover .recom-title {
+            color: #4f46e5;
+        }
+
+        .recom-author {
+            color: #64748b;
+            font-size: 0.88rem;
+        }
+
+        .recom-btn {
+            margin-top: auto;
+            font-size: 0.85rem;
+            font-weight: 600;
+            color: #4f46e5;
+            transition: color 0.2s ease;
+            display: inline-flex;
+            align-items: center;
+        }
+
+        .recom-card:hover .recom-btn {
+            color: #3730a3;
+        }
+
+        /* Responsive Media Queries */
+        @media (max-width: 768px) {
+            .hero-section {
+                padding: 50px 0 40px !important;
+                margin-bottom: 20px !important;
+            }
+            .hero-title {
+                font-size: 2rem !important;
+            }
+            .hero-subtitle {
+                font-size: 1rem !important;
+                margin-bottom: 25px !important;
+            }
+            .recommendation-container {
+                padding: 20px !important;
+                border-radius: 18px !important;
+            }
+            .recommendation-title {
+                font-size: 1.4rem !important;
+            }
+            .recommendation-header {
+                flex-direction: column !important;
+                align-items: flex-start !important;
+                gap: 10px !important;
+            }
+        }
+
+        @media (max-width: 576px) {
+            .navbar-brand {
+                font-size: 1rem !important;
+            }
+            .navbar .btn-sm {
+                padding: 6px 10px !important;
+                font-size: 0.75rem !important;
+            }
+            /* Hide username text on mobile to save space */
+            .navbar button span {
+                display: none !important;
+            }
+            .filter-badge {
+                padding: 5px 12px !important;
+                font-size: 0.8rem !important;
+            }
+        }
     </style>
 </head>
 <body>
@@ -222,8 +488,8 @@
 
     <div class="hero-section" style="margin-top: 56px;">
         <div class="container">
-            <h1 class="hero-title">Discover Your Next Read</h1>
-            <p class="hero-subtitle">Explore our curated collection of international literature.</p>
+            <h1 class="hero-title">Temukan Bacaan Favoritmu!</h1>
+            <p class="hero-subtitle">Jelajahi ribuan koleksi dan temukan bacaan favoritmu.</p>
             
             <form action="{{ route('public.index') }}" method="GET" class="search-bar">
                 <input type="text" name="search" class="form-control" placeholder="Search by title, author, or category..." value="{{ request('search') }}">
@@ -234,6 +500,48 @@
 
     <div class="container mb-5">
         
+        @if(Auth::check() && isset($recommendedBooks) && $recommendedBooks->count() > 0)
+            <!-- Section Rekomendasi Buku Hari Ini -->
+            <div class="recommendation-container mb-5">
+                <div class="recommendation-header d-flex align-items-center justify-content-between mb-4">
+                    <div>
+                        <span class="badge-recom">✨ PILIHAN HARI INI</span>
+                        <h2 class="recommendation-title mt-2 mb-1">Rekomendasi Spesial Untukmu</h2>
+                        <p class="recommendation-subtitle text-muted mb-0">Tiga buku pilihan yang dikurasi khusus untuk dibaca hari ini.</p>
+                    </div>
+                    <div class="d-none d-md-block">
+                        <span class="text-muted" style="font-size: 0.85rem;"><i class="bi bi-info-circle"></i> Rekomendasi akan berganti setiap login</span>
+                    </div>
+                </div>
+
+                <div class="row g-4">
+                    @foreach($recommendedBooks as $recomBook)
+                        <div class="col-md-4">
+                            <a href="{{ route('public.show', $recomBook->id) }}" class="recom-card">
+                                <div class="recom-card-inner">
+                                    <div class="recom-cover-wrapper">
+                                        <div class="recom-cover" style="background-image: url('{{ $recomBook->cover_image }}');">
+                                            @if(!$recomBook->cover_image)
+                                                <div class="d-flex align-items-center justify-content-center h-100 text-muted fs-2">📖</div>
+                                            @endif
+                                        </div>
+                                        @if($recomBook->category)
+                                            <span class="recom-category">{{ $recomBook->category }}</span>
+                                        @endif
+                                    </div>
+                                    <div class="recom-info">
+                                        <h3 class="recom-title text-truncate">{{ $recomBook->title }}</h3>
+                                        <div class="recom-author text-truncate">Oleh {{ $recomBook->author }}</div>
+                                        <div class="recom-btn mt-3">Lihat Buku &nbsp;→</div>
+                                    </div>
+                                </div>
+                            </a>
+                        </div>
+                    @endforeach
+                </div>
+            </div>
+        @endif
+
         <div class="filter-section text-center">
             <a href="{{ route('public.index') }}" class="filter-badge {{ !request('category') ? 'active' : '' }}">All</a>
             @foreach($categories as $category)
@@ -275,6 +583,66 @@
 
     </div>
 
+@if(Auth::check() && Auth::user()->role === 'visitor' && $overdueWarnings->count() > 0)
+<!-- ⚠️ Overdue Warning Modal -->
+<div class="overdue-modal-backdrop" id="overdueModalBackdrop">
+    <div class="overdue-modal" role="alertdialog" aria-modal="true" aria-labelledby="overdueTitle">
+
+        <div class="overdue-modal-header">
+            <div style="font-size: 2rem; margin-bottom: 8px;">⏰</div>
+            <h4 id="overdueTitle">Buku Terlambat Dikembalikan!</h4>
+            <p>Kamu memiliki {{ $overdueWarnings->count() }} buku yang melewati batas waktu peminjaman. Denda terus bertambah setiap hari.</p>
+        </div>
+
+        <div class="overdue-modal-body">
+            @foreach($overdueWarnings as $item)
+            <div class="overdue-book-item">
+                <div class="overdue-icon">📕</div>
+                <div>
+                    <div class="overdue-book-title">{{ $item['title'] }}</div>
+                    <div class="overdue-book-meta">Jatuh tempo: {{ $item['due_date'] }} &nbsp;·&nbsp; <strong style="color: #dc2626;">{{ $item['days_late'] }} hari terlambat</strong></div>
+                    <div class="overdue-fine">💰 Denda saat ini: Rp {{ number_format($item['fine'], 0, ',', '.') }}</div>
+                </div>
+            </div>
+            @endforeach
+
+            @php $totalFineOverdue = $overdueWarnings->sum('fine'); @endphp
+            <div class="overdue-total-box">
+                <span>Total denda terkumulasi</span>
+                <span>Rp {{ number_format($totalFineOverdue, 0, ',', '.') }}</span>
+            </div>
+
+            <div style="font-size: 0.78rem; color: #94a3b8; margin-top: 12px; text-align: center; line-height: 1.5;">
+                Denda dihitung otomatis Rp 2.000/hari sejak tanggal jatuh tempo.<br>
+                Segera kembalikan buku ke perpustakaan.
+            </div>
+        </div>
+
+        <div class="overdue-modal-footer">
+            <a href="{{ route('borrow.my') }}" class="btn-overdue-secondary">📋 Lihat Peminjaman</a>
+            <button class="btn-overdue-close" onclick="closeOverdueModal()">Saya Mengerti</button>
+        </div>
+    </div>
+</div>
+@endif
+
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+    function closeOverdueModal() {
+        const backdrop = document.getElementById('overdueModalBackdrop');
+        if (backdrop) {
+            backdrop.style.opacity = '0';
+            backdrop.style.transition = 'opacity 0.25s';
+            setTimeout(() => backdrop.remove(), 260);
+        }
+    }
+    // Tutup modal saat klik di luar kotak
+    const overdueBackdrop = document.getElementById('overdueModalBackdrop');
+    if (overdueBackdrop) {
+        overdueBackdrop.addEventListener('click', function(e) {
+            if (e.target === this) closeOverdueModal();
+        });
+    }
+</script>
 </body>
 </html>

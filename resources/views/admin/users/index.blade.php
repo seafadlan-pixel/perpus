@@ -8,9 +8,9 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <style>
         body { font-family: 'Inter', sans-serif; background-color: #f8fafc; color: #334155; }
-        .sidebar { background: #0f172a; min-height: 100vh; color: white; padding-top: 24px; box-shadow: 1px 0 0 #e2e8f0; }
+        .sidebar { background: #0f172a; min-height: 100vh; color: white; padding-top: 24px; box-shadow: 1px 0 0 #e2e8f0; display: flex; flex-direction: column; width: 250px; min-width: 250px; flex-shrink: 0; }
         .sidebar h4 { font-size: 1.1rem; font-weight: 700; color: #ffffff; letter-spacing: -0.02em; opacity: 0.95; }
-        .sidebar a { color: #94a3b8; text-decoration: none; padding: 12px 24px; display: block; font-size: 0.875rem; font-weight: 500; transition: all 0.15s; }
+        .sidebar a { color: #94a3b8; text-decoration: none; padding: 12px 24px; display: block; font-size: 0.875rem; font-weight: 500; transition: all 0.15s; white-space: nowrap; }
         .sidebar a:hover, .sidebar a.active { background: #1e293b; color: white; }
         .main-content { padding: 40px; }
         .card { border: 1px solid #e2e8f0; border-radius: 12px; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05); background-color: #ffffff; overflow: hidden; }
@@ -56,9 +56,53 @@
         .stat-card { background: white; border: 1px solid #e2e8f0; border-radius: 10px; padding: 20px 24px; }
         .stat-number { font-size: 1.8rem; font-weight: 700; color: #0f172a; line-height: 1; }
         .stat-label { font-size: 0.8rem; color: #64748b; margin-top: 4px; }
+
+        /* ===== RESPONSIVE ===== */
+        .mobile-topbar { display: none; background: #0f172a; padding: 12px 20px; align-items: center; justify-content: space-between; position: sticky; top: 0; z-index: 1000; }
+        .mobile-topbar .brand { color: white; font-weight: 700; font-size: 1rem; }
+        .hamburger-btn { background: none; border: none; cursor: pointer; padding: 4px; display: flex; flex-direction: column; gap: 5px; }
+        .hamburger-btn span { display: block; width: 24px; height: 2px; background: white; border-radius: 2px; transition: all 0.3s; }
+        .mobile-nav { display: none; background: #0f172a; flex-direction: column; padding-bottom: 12px; }
+        .mobile-nav.open { display: flex; }
+        .mobile-nav a { color: #94a3b8; text-decoration: none; padding: 10px 24px; font-size: 0.875rem; font-weight: 500; border-bottom: 1px solid #1e293b; transition: all 0.15s; }
+        .mobile-nav a:hover, .mobile-nav a.active { background: #1e293b; color: white; }
+        .mobile-nav .logout-btn { padding: 12px 20px; }
+        .mobile-nav .logout-btn .btn { font-size: 0.85rem; }
+
+        @media (max-width: 992px) {
+            .page-wrapper { flex-direction: column !important; }
+            .sidebar { display: none !important; }
+            .mobile-topbar { display: flex !important; }
+            .main-content { padding: 20px 16px; }
+            .stat-number { font-size: 1.4rem; }
+        }
+        @media (max-width: 576px) {
+            .main-content { padding: 16px 12px; }
+            h2 { font-size: 1.3rem; }
+        }
     </style>
 </head>
 <body>
+
+<!-- Mobile Top Bar -->
+<div class="mobile-topbar">
+    <span class="brand">📚 Library Admin</span>
+    <button class="hamburger-btn" id="hamburgerBtn" aria-label="Toggle menu">
+        <span></span><span></span><span></span>
+    </button>
+</div>
+<div class="mobile-nav" id="mobileNav">
+    <a href="{{ route('books.index') }}">📚 Book Management</a>
+    <a href="{{ route('admin.borrowings.index') }}">📋 Borrowing Management</a>
+    <a href="{{ route('admin.users.index') }}" class="active">👥 Member List</a>
+    <a href="{{ route('public.index') }}">🌍 View Public Site</a>
+    <div class="logout-btn">
+        <form action="{{ route('logout') }}" method="POST">
+            @csrf
+            <button type="submit" class="btn btn-danger w-100">Logout</button>
+        </form>
+    </div>
+</div>
 
 <div class="d-flex">
     <!-- Sidebar -->
@@ -68,10 +112,12 @@
         <a href="{{ route('admin.borrowings.index') }}">📋 Borrowing Management</a>
         <a href="{{ route('admin.users.index') }}" class="active">👥 Member List</a>
         <a href="{{ route('public.index') }}">🌍 View Public Site</a>
-        <form action="{{ route('logout') }}" method="POST" style="position: absolute; bottom: 20px; width: 250px; padding: 0 16px;">
-            @csrf
-            <button type="submit" class="btn btn-danger w-100">Logout</button>
-        </form>
+        <div class="mt-auto px-3 pb-4">
+            <form action="{{ route('logout') }}" method="POST">
+                @csrf
+                <button type="submit" class="btn btn-danger w-100">Logout</button>
+            </form>
+        </div>
     </div>
 
     <!-- Main Content -->
@@ -122,112 +168,125 @@
         <!-- Users Table -->
         <div class="card">
             <div class="card-body p-0">
-                <table class="table table-hover align-middle mb-0">
-                    <thead class="table-light">
-                        <tr>
-                            <th class="ps-4">No</th>
-                            <th>Anggota</th>
-                            <th>Email</th>
-                            <th>Kelas</th>
-                            <th>Status Akun</th>
-                            <th>Peminjaman</th>
-                            <th>Terdaftar</th>
-                            <th class="text-center">Aksi</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        @forelse ($users as $user)
-                        <tr class="{{ !$user->is_active ? 'row-inactive' : '' }}">
-                            <td class="ps-4 text-muted">{{ $loop->iteration }}</td>
-                            <td>
-                                <div class="d-flex align-items-center gap-2">
-                                    <img
-                                        src="https://ui-avatars.com/api/?name={{ urlencode($user->name) }}&background={{ $user->is_active ? '0f172a' : '94a3b8' }}&color=ffffff&size=72&rounded=true&bold=true"
-                                        alt="{{ $user->name }}"
-                                        class="avatar-sm"
-                                    >
-                                    <div>
-                                        <span class="fw-semibold {{ $user->is_active ? 'text-dark' : 'text-muted' }}">{{ $user->name }}</span>
-                                        @if(!$user->is_active)
-                                            <div style="font-size: 0.7rem; color: #ef4444;">🚫 Akun dinonaktifkan</div>
+                <div class="table-responsive">
+                    <table class="table table-hover align-middle mb-0">
+                        <thead class="table-light">
+                            <tr>
+                                <th class="ps-4">No</th>
+                                <th>Anggota</th>
+                                <th>Email</th>
+                                <th>Kelas</th>
+                                <th>Status Akun</th>
+                                <th>Peminjaman</th>
+                                <th>Terdaftar</th>
+                                <th class="text-center">Aksi</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @forelse ($users as $user)
+                            <tr class="{{ !$user->is_active ? 'row-inactive' : '' }}">
+                                <td class="ps-4 text-muted">{{ $loop->iteration }}</td>
+                                <td>
+                                    <div class="d-flex align-items-center gap-2">
+                                        <img
+                                            src="https://ui-avatars.com/api/?name={{ urlencode($user->name) }}&background={{ $user->is_active ? '0f172a' : '94a3b8' }}&color=ffffff&size=72&rounded=true&bold=true"
+                                            alt="{{ $user->name }}"
+                                            class="avatar-sm"
+                                        >
+                                        <div>
+                                            <span class="fw-semibold {{ $user->is_active ? 'text-dark' : 'text-muted' }}">{{ $user->name }}</span>
+                                            @if(!$user->is_active)
+                                                <div style="font-size: 0.7rem; color: #ef4444;">🚫 Akun dinonaktifkan</div>
+                                            @endif
+                                        </div>
+                                    </div>
+                                </td>
+                                <td class="text-muted">{{ $user->email }}</td>
+                                <td>
+                                    @if($user->class)
+                                        <span class="badge-status badge-class">🏫 {{ $user->class }}</span>
+                                    @else
+                                        <span class="text-muted">-</span>
+                                    @endif
+                                </td>
+                                <td>
+                                    @if($user->is_active)
+                                        <span class="badge-status badge-active">✅ Aktif</span>
+                                    @else
+                                        <span class="badge-status badge-inactive">🚫 Nonaktif</span>
+                                    @endif
+                                </td>
+                                <td>
+                                    @php
+                                        $activeBorrowings = $user->borrowings->whereIn('status', ['pending', 'approved'])->count();
+                                        $totalFine = $user->borrowings->sum('fine_amount');
+                                    @endphp
+                                    <div class="d-flex flex-column gap-1">
+                                        <span class="text-dark fw-medium" style="font-size: 0.82rem;">
+                                            {{ $user->borrowings->count() }} peminjaman
+                                        </span>
+                                        @if($totalFine > 0)
+                                            <span class="fine-badge">💰 Denda: Rp {{ number_format($totalFine, 0, ',', '.') }}</span>
+                                        @else
+                                            <span class="fine-badge no-fine">✅ Bebas denda</span>
                                         @endif
                                     </div>
-                                </div>
-                            </td>
-                            <td class="text-muted">{{ $user->email }}</td>
-                            <td>
-                                @if($user->class)
-                                    <span class="badge-status badge-class">🏫 {{ $user->class }}</span>
-                                @else
-                                    <span class="text-muted">-</span>
-                                @endif
-                            </td>
-                            <td>
-                                @if($user->is_active)
-                                    <span class="badge-status badge-active">✅ Aktif</span>
-                                @else
-                                    <span class="badge-status badge-inactive">🚫 Nonaktif</span>
-                                @endif
-                            </td>
-                            <td>
-                                @php
-                                    $activeBorrowings = $user->borrowings->whereIn('status', ['pending', 'approved'])->count();
-                                    $totalFine = $user->borrowings->sum('fine_amount');
-                                @endphp
-                                <div class="d-flex flex-column gap-1">
-                                    <span class="text-dark fw-medium" style="font-size: 0.82rem;">
-                                        {{ $user->borrowings->count() }} peminjaman
-                                    </span>
-                                    @if($totalFine > 0)
-                                        <span class="fine-badge">💰 Denda: Rp {{ number_format($totalFine, 0, ',', '.') }}</span>
-                                    @else
-                                        <span class="fine-badge no-fine">✅ Bebas denda</span>
-                                    @endif
-                                </div>
-                            </td>
-                            <td class="text-muted" style="font-size: 0.82rem;">{{ $user->created_at->format('d M Y') }}</td>
-                            <td class="text-center">
-                                <div class="d-flex gap-2 justify-content-center flex-wrap">
-                                    <!-- Tombol lihat peminjaman -->
-                                    <button
-                                        type="button"
-                                        class="btn btn-sm btn-outline-dark rounded-3 px-3"
-                                        style="font-size: 0.78rem;"
-                                        data-bs-toggle="modal"
-                                        data-bs-target="#modalUser{{ $user->id }}"
-                                    >
-                                        📋 Peminjaman
-                                    </button>
+                                </td>
+                                <td class="text-muted" style="font-size: 0.82rem;">{{ $user->created_at->format('d M Y') }}</td>
+                                <td class="text-center">
+                                    <div class="d-flex gap-2 justify-content-center flex-wrap">
+                                        <!-- Tombol lihat peminjaman -->
+                                        <button
+                                            type="button"
+                                            class="btn btn-sm btn-outline-dark rounded-3 px-3"
+                                            style="font-size: 0.78rem;"
+                                            data-bs-toggle="modal"
+                                            data-bs-target="#modalUser{{ $user->id }}"
+                                        >
+                                            📋 Peminjaman
+                                        </button>
 
-                                    <!-- Tombol aktif/nonaktif -->
-                                    <form action="{{ route('admin.users.toggle_active', $user) }}" method="POST" class="d-inline"
-                                          onsubmit="return confirm('{{ $user->is_active ? 'Nonaktifkan akun ' . $user->name . '? Member tidak akan bisa login.' : 'Aktifkan kembali akun ' . $user->name . '?' }}')">
-                                        @csrf
-                                        @method('PATCH')
-                                        @if($user->is_active)
-                                            <button type="submit" class="btn-deactivate rounded-3 px-3">
-                                                🚫 Nonaktifkan
-                                            </button>
-                                        @else
-                                            <button type="submit" class="btn-activate rounded-3 px-3">
-                                                ✅ Aktifkan
-                                            </button>
-                                        @endif
-                                    </form>
-                                </div>
-                            </td>
-                        </tr>
-                        @empty
-                        <tr>
-                            <td colspan="8" class="text-center py-5 text-muted">
-                                <div style="font-size: 3rem; margin-bottom: 12px;">👥</div>
-                                <h5>Belum ada siswa yang mendaftar</h5>
-                                <p class="mb-0" style="font-size: 0.9rem;">Siswa yang membuat akun akan terdaftar di sini.</p>
-                            </td>
-                        </tr>
-                        @endforelse
-                    </tbody>
-                </table>
+                                        <!-- Tombol reset password -->
+                                        <button
+                                            type="button"
+                                            class="btn btn-sm btn-outline-primary rounded-3 px-3"
+                                            style="font-size: 0.78rem;"
+                                            data-bs-toggle="modal"
+                                            data-bs-target="#modalResetPw{{ $user->id }}"
+                                        >
+                                            🔑 Reset PW
+                                        </button>
+
+                                        <!-- Tombol aktif/nonaktif -->
+                                        <form action="{{ route('admin.users.toggle_active', $user) }}" method="POST" class="d-inline"
+                                              onsubmit="return confirm('{{ $user->is_active ? 'Nonaktifkan akun ' . $user->name . '? Member tidak akan bisa login.' : 'Aktifkan kembali akun ' . $user->name . '?' }}')">
+                                            @csrf
+                                            @method('PATCH')
+                                            @if($user->is_active)
+                                                <button type="submit" class="btn-deactivate rounded-3 px-3">
+                                                    🚫 Nonaktifkan
+                                                </button>
+                                            @else
+                                                <button type="submit" class="btn-activate rounded-3 px-3">
+                                                    ✅ Aktifkan
+                                                </button>
+                                            @endif
+                                        </form>
+                                    </div>
+                                </td>
+                            </tr>
+                            @empty
+                            <tr>
+                                <td colspan="8" class="text-center py-5 text-muted">
+                                    <div style="font-size: 3rem; margin-bottom: 12px;">👥</div>
+                                    <h5>Belum ada siswa yang mendaftar</h5>
+                                    <p class="mb-0" style="font-size: 0.9rem;">Siswa yang membuat akun akan terdaftar di sini.</p>
+                                </td>
+                            </tr>
+                            @endforelse
+                        </tbody>
+                    </table>
+                </div>
             </div>
         </div>
 
@@ -401,6 +460,89 @@
 </div>
 @endforeach
 
+<!-- ============================================================
+     MODALS: Reset Password per User
+     ============================================================ -->
+@foreach ($users as $user)
+<div class="modal fade" id="modalResetPw{{ $user->id }}" tabindex="-1" aria-labelledby="modalResetPw{{ $user->id }}Label" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" style="max-width: 420px;">
+        <div class="modal-content" style="border-radius: 16px; border: none; box-shadow: 0 20px 50px rgba(0,0,0,0.15);">
+
+            <div class="modal-header" style="background: linear-gradient(135deg, #1e3a5f, #0f172a); border-radius: 16px 16px 0 0; padding: 20px 24px;">
+                <div>
+                    <h5 class="modal-title text-white fw-bold mb-1" id="modalResetPw{{ $user->id }}Label">
+                        🔑 Reset Password
+                    </h5>
+                    <div class="text-secondary" style="font-size: 0.8rem;">{{ $user->name }} · {{ $user->email }}</div>
+                </div>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+            </div>
+
+            <div class="modal-body p-4">
+
+                @if(session('success') && session()->has('reset_user_id') && session('reset_user_id') == $user->id)
+                    <div class="alert alert-success rounded-3 mb-3" style="font-size: 0.875rem;">✅ {{ session('success') }}</div>
+                @endif
+
+                <div class="alert" style="background: #fef9c3; border: 1px solid #fde68a; border-radius: 10px; font-size: 0.82rem; color: #92400e; padding: 12px 14px; margin-bottom: 20px;">
+                    ⚠️ Password anggota akan diubah. Informasikan password baru kepada <strong>{{ $user->name }}</strong> secara langsung.
+                </div>
+
+                <form action="{{ route('admin.users.reset_password', $user) }}" method="POST">
+                    @csrf
+                    @method('PATCH')
+
+                    <div class="mb-3">
+                        <label class="form-label" style="font-size: 0.85rem; font-weight: 600; color: #334155;">Password Baru</label>
+                        <input
+                            type="password"
+                            name="new_password"
+                            class="form-control rounded-3"
+                            placeholder="Minimal 6 karakter"
+                            required
+                            minlength="6"
+                            style="font-size: 0.875rem;"
+                        >
+                    </div>
+
+                    <div class="mb-4">
+                        <label class="form-label" style="font-size: 0.85rem; font-weight: 600; color: #334155;">Konfirmasi Password Baru</label>
+                        <input
+                            type="password"
+                            name="new_password_confirmation"
+                            class="form-control rounded-3"
+                            placeholder="Ulangi password baru"
+                            required
+                            minlength="6"
+                            style="font-size: 0.875rem;"
+                        >
+                    </div>
+
+                    <div class="d-flex gap-2">
+                        <button type="submit" class="btn btn-primary flex-grow-1 rounded-3"
+                                style="background: #0f172a; border: none; font-size: 0.875rem; font-weight: 600; padding: 10px;"
+                                onclick="return confirm('Reset password akun {{ $user->name }}? Pastikan sudah beritahu member.')">
+                            🔑 Simpan Password Baru
+                        </button>
+                        <button type="button" class="btn btn-outline-secondary rounded-3" data-bs-dismiss="modal" style="font-size: 0.875rem;">Batal</button>
+                    </div>
+                </form>
+
+            </div>
+        </div>
+    </div>
+</div>
+@endforeach
+
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+    const hamburgerBtn = document.getElementById('hamburgerBtn');
+    const mobileNav = document.getElementById('mobileNav');
+    if (hamburgerBtn && mobileNav) {
+        hamburgerBtn.addEventListener('click', () => {
+            mobileNav.classList.toggle('open');
+        });
+    }
+</script>
 </body>
 </html>

@@ -8,9 +8,9 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <style>
         body { font-family: 'Inter', sans-serif; background-color: #f8fafc; color: #334155; }
-        .sidebar { background: #0f172a; min-height: 100vh; color: white; padding-top: 24px; box-shadow: 1px 0 0 #e2e8f0; display: flex; flex-direction: column; }
+        .sidebar { background: #0f172a; min-height: 100vh; color: white; padding-top: 24px; box-shadow: 1px 0 0 #e2e8f0; display: flex; flex-direction: column; width: 250px; min-width: 250px; flex-shrink: 0; }
         .sidebar h4 { font-size: 1.1rem; font-weight: 700; color: #ffffff; letter-spacing: -0.02em; opacity: 0.95; }
-        .sidebar a { color: #94a3b8; text-decoration: none; padding: 12px 24px; display: block; font-size: 0.875rem; font-weight: 500; transition: all 0.15s; }
+        .sidebar a { color: #94a3b8; text-decoration: none; padding: 12px 24px; display: block; font-size: 0.875rem; font-weight: 500; transition: all 0.15s; white-space: nowrap; }
         .sidebar a:hover, .sidebar a.active { background: #1e293b; color: white; }
         .main-content { padding: 40px; }
         .card { border: 1px solid #e2e8f0; border-radius: 12px; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05); background-color: #ffffff; overflow: hidden; }
@@ -100,6 +100,61 @@
         .table tbody tr:last-child td {
             border-bottom: none;
         }
+
+        /* Responsive Layout Media Queries */
+        @media (max-width: 992px) {
+            .d-flex {
+                flex-direction: column !important;
+            }
+            .sidebar {
+                width: 100% !important;
+                height: auto !important;
+                min-height: auto !important;
+                position: relative !important;
+                padding: 16px !important;
+                flex-direction: row !important;
+                flex-wrap: wrap !important;
+                justify-content: space-between !important;
+                align-items: center !important;
+            }
+            .sidebar h4 {
+                margin-bottom: 0 !important;
+                margin-right: 20px !important;
+            }
+            .sidebar .mt-auto {
+                margin-top: 0 !important;
+                padding: 0 !important;
+                width: auto !important;
+            }
+            .sidebar form {
+                display: inline-block !important;
+            }
+            .sidebar a {
+                padding: 8px 12px !important;
+                border-radius: 6px !important;
+            }
+            .main-content {
+                padding: 20px !important;
+            }
+        }
+        @media (max-width: 576px) {
+            .sidebar {
+                flex-direction: column !important;
+                align-items: stretch !important;
+            }
+            .sidebar h4 {
+                margin-bottom: 15px !important;
+                text-align: center !important;
+            }
+            .sidebar a {
+                text-align: center !important;
+                margin-bottom: 4px !important;
+            }
+            .sidebar .mt-auto {
+                width: 100% !important;
+                margin-top: 10px !important;
+            }
+        }
     </style>
 </head>
 <body>
@@ -138,10 +193,12 @@
         <!-- Books Table -->
         <div class="card">
             <div class="card-body p-0">
-                <table class="table table-hover align-middle mb-0">
+                <div class="table-responsive">
+                    <table class="table table-hover align-middle mb-0">
                     <thead class="table-light">
                         <tr>
                             <th class="ps-4">No</th>
+                            <th>Sampul</th>
                             <th>Info Buku</th>
                             <th>Penerbit</th>
                             <th>Kategori</th>
@@ -154,6 +211,13 @@
                         @forelse ($books as $book)
                         <tr>
                             <td class="ps-4">{{ $loop->iteration }}</td>
+                            <td>
+                                @if($book->cover_image)
+                                    <img src="{{ $book->cover_image }}" alt="Cover" style="width: 50px; height: 70px; object-fit: cover; border-radius: 6px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); border: 1px solid #e2e8f0;">
+                                @else
+                                    <div class="d-flex align-items-center justify-content-center bg-light text-muted" style="width: 50px; height: 70px; border-radius: 6px; border: 1px dashed #cbd5e1; font-size: 1.25rem;">📖</div>
+                                @endif
+                            </td>
                             <td>
                                 <div class="fw-semibold text-dark">{{ $book->title }}</div>
                                 <div class="text-muted" style="font-size: 0.75rem;">Oleh: {{ $book->author }}</div>
@@ -190,7 +254,7 @@
                         </tr>
                         @empty
                         <tr>
-                            <td colspan="7" class="text-center py-5 text-muted">
+                            <td colspan="8" class="text-center py-5 text-muted">
                                 <div style="font-size: 3rem; margin-bottom: 12px;">📚</div>
                                 <h5>Belum ada buku di katalog</h5>
                                 <p class="mb-0" style="font-size: 0.9rem;">Silakan tambahkan buku baru untuk mengisi katalog perpustakaan.</p>
@@ -199,6 +263,7 @@
                         @endforelse
                     </tbody>
                 </table>
+                </div>
             </div>
         </div>
 

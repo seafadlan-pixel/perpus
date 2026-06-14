@@ -19,6 +19,11 @@ class WebAuthController extends Controller
         return view('auth.register');
     }
 
+    public function showForgotPassword()
+    {
+        return view('auth.forgot-password');
+    }
+
     public function register(Request $request)
     {
         $request->validate([
@@ -48,6 +53,10 @@ class WebAuthController extends Controller
 
         if (Auth::attempt($credentials)) {
             $request->session()->regenerate();
+
+            // Generate rekomendasi buku baru khusus login ini
+            $randomIds = \App\Models\Book::inRandomOrder()->limit(3)->pluck('id')->toArray();
+            $request->session()->put('recommended_book_ids', $randomIds);
 
             // Cek apakah akun aktif
             if (!Auth::user()->is_active) {

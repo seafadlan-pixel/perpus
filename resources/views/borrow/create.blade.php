@@ -202,6 +202,35 @@
         .required-star {
             color: #ef4444;
         }
+
+        /* Responsive Media Queries */
+        @media (max-width: 576px) {
+            .book-summary {
+                flex-direction: column !important;
+                align-items: flex-start !important;
+                padding: 20px !important;
+                gap: 15px !important;
+            }
+            .book-summary-stock {
+                margin-left: 0 !important;
+                border-left: none !important;
+                border-top: 1px solid #e2e8f0 !important;
+                padding-left: 0 !important;
+                padding-top: 15px !important;
+                width: 100% !important;
+                text-align: left !important;
+            }
+            .form-section {
+                padding: 20px !important;
+            }
+            .borrow-container {
+                margin-top: 80px !important;
+                padding: 0 16px !important;
+            }
+            .navbar button span {
+                display: none !important;
+            }
+        }
     </style>
 </head>
 <body>
